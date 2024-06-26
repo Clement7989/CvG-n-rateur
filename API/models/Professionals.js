@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const ProfessionalSchema = new mongoose.Schema({
+const ProfessionalsSchema = new mongoose.Schema({
   title: { type: String, required: true },
   business: { type: String, required: true },
   date_start: { type: Date, required: true },
@@ -13,6 +13,6 @@ const ProfessionalSchema = new mongoose.Schema({
   },
 });
 
-const Professional = mongoose.models("Professional", ProfessionalSchema);
+const Professionals = mongoose.model("Professionals", ProfessionalsSchema);
 
-export default Professional;
+export default Professionals;

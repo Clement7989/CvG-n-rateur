@@ -1,7 +1,11 @@
 import Joi from "joi";
 
 export const CvGeneretedSchema = Joi.object({
-  date: Joi.date().required(),
-  time: Joi.string().required(),
-  user_id: Joi.string().required(),
+  userId: Joi.string().required(),
+  title: Joi.string().required(),
+  otherInfos: Joi.string().allow(null),
+  professionals: Joi.array().items(Joi.string()),
+  skills: Joi.array().items(Joi.string()),
+  trainings: Joi.array().items(Joi.string()),
+  userDetails: Joi.string().allow(null),
 });

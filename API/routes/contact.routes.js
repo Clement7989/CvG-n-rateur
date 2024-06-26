@@ -1,20 +1,33 @@
 import express from "express";
+const router = express.Router();
 
 import {
   createContact,
-  getContact,
+  getContacts,
   getContactById,
   updateContact,
   deleteContact,
-} from "../Controllers/contactController.js";
-import { protect } from "../Controllers/authController.js";
+  markContactAsRead,
+  validateContact,
+} from "../controllers/contactController.js";
 
-const router = express.Router();
+import { authMiddleware } from "../middlewares/authMiddleware.js";
+import { adminMiddleware } from "../Middlewares/adminMiddleware.js";
 
-router.post("/", protect, createContact);
-router.get("/", protect, getContact);
-router.get("/:id", protect, getContactById);
-router.put("/:id", protect, updateContact);
-router.delete("/:id", protect, deleteContact);
+// Routes accessibles par tous les utilisateurs
+router.post("/", createContact);
+router.get("/", getContacts);
+router.get("/:id", getContactById);
+
+// Routes protégées, accessibles uniquement par les administrateurs
+router.put("/:id", authMiddleware, adminMiddleware, updateContact);
+router.delete("/:id", authMiddleware, adminMiddleware, deleteContact);
+router.put(
+  "/:id/mark-read",
+  authMiddleware,
+  adminMiddleware,
+  markContactAsRead
+);
+router.put("/:id/validate", authMiddleware, adminMiddleware, validateContact);
 
 export default router;

@@ -11,6 +11,6 @@ const UserCompletSchema = new mongoose.Schema({
   },
 });
 
-const UserComplet = mongoose.model("User", UserCompletSchema);
+const UserComplet = mongoose.model("UserComplet", UserCompletSchema);
 
 export default UserComplet;

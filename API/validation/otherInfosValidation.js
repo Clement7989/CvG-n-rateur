@@ -1,8 +1,8 @@
 import Joi from "joi";
 
-export const OtherInfosSchema = Joi.object({
+export const otherInfosSchema = Joi.object({
   permit: Joi.boolean().required(),
-  hobbies: Joi.string().min(10).max(30).required(),
-  languages: Joi.string().min(5).max(20).required(),
+  hobbies: Joi.array().items(Joi.string()).required(),
+  languages: Joi.array().items(Joi.string()).required(),
   cv_id: Joi.string().required(),
 });

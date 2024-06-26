@@ -6,12 +6,12 @@ const UserDetailsSchema = new mongoose.Schema({
   city: { type: String, required: true },
   country: { type: String, required: true },
   cv_id: {
-    type: mongoose.Schema.Types.ObjectifId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "CvGenereted",
     required: true,
   },
 });
 
-const UserDetails = mongoose.models("UserDetails", UserDetailsSchema);
+const UserDetails = mongoose.model("UserDetails", UserDetailsSchema);
 
 export default UserDetails;
