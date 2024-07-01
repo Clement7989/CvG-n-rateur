@@ -1,7 +1,15 @@
-// otherInfosController.js
+
 
 import OtherInfos from "../models/OtherInfos.js";
 import { otherInfosSchema } from "../validation/otherInfosValidation.js";
+
+/**
+ * Create a new other information entry.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - The created other information or an error message.
+ */
 
 export const createOtherInfo = async (req, res) => {
   const { error, value } = otherInfosSchema.validate(req.body);
@@ -18,7 +26,14 @@ export const createOtherInfo = async (req, res) => {
   }
 };
 
-// Récupérer toutes les autres informations
+/**
+ * Get all other information entries.
+ *
+
+ * @param {Object} res - The response object.
+ * @returns {Object} - An array of other information entries or an error message.
+ */
+
 export const getAllOtherInfos = async (req, res) => {
   try {
     const otherInfos = await OtherInfos.find();
@@ -28,7 +43,14 @@ export const getAllOtherInfos = async (req, res) => {
   }
 };
 
-// Récupérer une autre information par ID
+/**
+ * Get a specific other information entry by ID.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - The other information entry or an error message.
+ */
+
 export const getOtherInfoById = async (req, res) => {
   const { id } = req.params;
 
@@ -43,7 +65,14 @@ export const getOtherInfoById = async (req, res) => {
   }
 };
 
-// Mettre à jour une autre information
+/**
+ * Update a specific other information entry by ID.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - The updated other information entry or an error message.
+ */
+
 export const updateOtherInfo = async (req, res) => {
   const { id } = req.params;
   const { error, value } = otherInfosSchema.validate(req.body);
@@ -65,8 +94,14 @@ export const updateOtherInfo = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+/**
+ * Delete a specific other information entry by ID.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - A success message or an error message.
+ */
 
-// Supprimer une autre information
 export const deleteOtherInfo = async (req, res) => {
   const { id } = req.params;
 

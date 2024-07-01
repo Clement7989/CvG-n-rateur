@@ -1,17 +1,20 @@
 import User from "../models/User.js";
 
+/**
+ * Controller function to update user role.
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {Object} JSON response indicating success or failure.
+ */
+
 export const updateUserRole = async (req, res) => {
   const { userId, newRole } = req.body;
 
   try {
-    // Vérifiez si l'utilisateur authentifié a le droit de mettre à jour les rôles (peut être redondant avec le middleware adminMiddleware)
     if (!req.user || req.user.role !== "admin") {
-      return res
-        .status(403)
-        .json({ message: "Non autorisé à effectuer cette action" });
+      return res.status(403).json({ message: "Accès non autorisé" });
     }
 
-    // Mettre à jour le rôle de l'utilisateur avec l'ID spécifié
     const user = await User.findByIdAndUpdate(
       userId,
       { role: newRole },
@@ -24,6 +27,7 @@ export const updateUserRole = async (req, res) => {
 
     res.json(user);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Erreur lors de la mise à jour du rôle :", error);
+    res.status(500).json({ message: "Erreur serveur" });
   }
 };

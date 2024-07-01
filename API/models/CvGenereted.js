@@ -1,5 +1,10 @@
 import mongoose from "mongoose";
 
+/**
+ * Mongoose schema for the CvGenereted model.
+ * This schema represents a generated CV with references to user and other related information.
+ */
+
 const CvGeneretedSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -35,6 +40,22 @@ const CvGeneretedSchema = new mongoose.Schema({
   userDetails: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "UserDetails",
+  },
+  userComplet: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "UserComplet",
+  },
+  firstName: {
+    type: String,
+    required: true,
+  },
+  lastName: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
   },
 });
 

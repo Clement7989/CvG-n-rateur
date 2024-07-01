@@ -1,6 +1,15 @@
 import Professionals from "../models/Professionals.js";
 import { ProfessionalSchema } from "../validation/professionalsValidation.js";
 
+/**
+ * Create a new professional entry.
+ *
+ * @param {Object} req - The request object containing professional details.
+ *                       Requires: title, business, date_start, date_end, description, cv_id
+ * @param {Object} res - The response object.
+ * @returns {Object} - The created professional entry or an error message.
+ */
+
 export const createProfessional = async (req, res) => {
   const { error } = ProfessionalSchema.validate(req.body);
   if (error) return res.status(400).json({ message: error.details[0].message });
@@ -23,6 +32,14 @@ export const createProfessional = async (req, res) => {
   }
 };
 
+/**
+ * Get all professional entries.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - An array of all professional entries or an error message.
+ */
+
 export const getAllProfessionals = async (req, res) => {
   try {
     const professionals = await Professionals.find();
@@ -31,6 +48,14 @@ export const getAllProfessionals = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+/**
+ * Get a specific professional entry by ID.
+ *
+ * @param {Object} req - The request object containing the professional ID.
+ * @param {Object} res - The response object.
+ * @returns {Object} - The professional entry matching the ID or an error message.
+ */
 
 export const getProfessionalById = async (req, res) => {
   const professionalId = req.params.id;
@@ -46,6 +71,15 @@ export const getProfessionalById = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+/**
+ * Update a specific professional entry by ID.
+ *
+ * @param {Object} req - The request object containing the professional ID and updated details.
+ *                       Requires: title, business, date_start, date_end, description, cv_id
+ * @param {Object} res - The response object.
+ * @returns {Object} - The updated professional entry or an error message.
+ */
 
 export const updateProfessional = async (req, res) => {
   const { error } = ProfessionalSchema.validate(req.body);
@@ -70,6 +104,14 @@ export const updateProfessional = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+/**
+ * Delete a specific professional entry by ID.
+ *
+ * @param {Object} req - The request object containing the professional ID.
+ * @param {Object} res - The response object.
+ * @returns {Object} - A success message or an error message.
+ */
 
 export const deleteProfessional = async (req, res) => {
   const professionalId = req.params.id;

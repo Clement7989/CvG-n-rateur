@@ -1,5 +1,3 @@
-// otherInfosRoutes.js
-
 import express from "express";
 import {
   createOtherInfo,
@@ -11,19 +9,19 @@ import {
 
 const router = express.Router();
 
-// Créer une nouvelle autre information
+// Creating a new instance of Express Router
 router.post("/", createOtherInfo);
 
-// Récupérer toutes les autres informations
+// Route to get all "other information" entries
 router.get("/", getAllOtherInfos);
 
-// Récupérer une autre information par ID
+// Route to get a specific "other information" entry by ID
 router.get("/:id", getOtherInfoById);
 
-// Mettre à jour une autre information
+// Route to update a specific "other information" entry by ID
 router.put("/:id", updateOtherInfo);
 
-// Supprimer une autre information
+// Route to delete a specific "other information" entry by ID
 router.delete("/:id", deleteOtherInfo);
 
 export default router;

@@ -1,5 +1,10 @@
 import mongoose from "mongoose";
 
+/**
+ * Mongoose schema for the OtherInfos model.
+ * Represents additional information related to a generated CV.
+ */
+
 const OtherInfosSchema = new mongoose.Schema({
   permit: { type: Boolean, required: true },
   hobbies: { type: [String], required: true },
@@ -11,7 +16,6 @@ const OtherInfosSchema = new mongoose.Schema({
   },
 });
 
-// Utilisation de mongoose.model pour créer ou récupérer le modèle OtherInfos
 const OtherInfos = mongoose.model("OtherInfos", OtherInfosSchema);
 
 export default OtherInfos;

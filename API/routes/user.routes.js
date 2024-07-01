@@ -1,9 +1,6 @@
-// ASYNC = PERMET DE FAIRE DES PROMESSES COMME AWAIT = ON ATTEND LA PROMESSE
-
 import express from "express";
-import { updateUserRole } from "../Controllers/userController.js";
+
 import {
-  createUser,
   getUsers,
   getUserById,
   updateUser,
@@ -12,12 +9,16 @@ import {
 
 const router = express.Router();
 
-router.post("/", createUser);
+// Route to get all users
 router.get("/", getUsers);
-router.get("/:id", getUserById);
-router.put("/:id", updateUser);
-router.delete("/:id", deleteUser);
 
-router.put("/update-role/:id", updateUserRole);
+// Route to get a user by ID
+router.get("/:id", getUserById);
+
+// Route to update a user by ID
+router.put("/:id", updateUser);
+
+// Route to delete a user by ID
+router.delete("/:id", deleteUser);
 
 export default router;

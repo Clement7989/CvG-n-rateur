@@ -1,11 +1,18 @@
 import Skills from "../models/Skills.js";
 import { SkillsSchema } from "../validation/skillsValidation.js";
 
-// Créer une nouvelle compétence
+/**
+ * Create a new skill.
+ *
+ * @param {Object} req - HTTP request object containing the skill data to create.
+ * @param {Object} res - HTTP response object returned to the client.
+ * @returns {Object} - The created skill or an error message.
+ */
+
 export const createSkill = async (req, res) => {
   const { wording, cv_id } = req.body;
 
-  // Valider les données avec Joi
+
   const { error } = SkillsSchema.validate({ wording, cv_id });
   if (error) {
     return res.status(400).json({ message: error.details[0].message });
@@ -20,7 +27,14 @@ export const createSkill = async (req, res) => {
   }
 };
 
-// Obtenir toutes les compétences
+/**
+ * Get all skills.
+ *
+ * @param {Object} req - HTTP request object (no specific parameters required).
+ * @param {Object} res - HTTP response object returned to the client.
+ * @returns {Object} - An array of all skills or an error message.
+ */
+
 export const getSkills = async (req, res) => {
   try {
     const skills = await Skills.find();
@@ -30,7 +44,14 @@ export const getSkills = async (req, res) => {
   }
 };
 
-// Obtenir une compétence par son ID
+/**
+ * Get a skill by its ID.
+ *
+ * @param {Object} req - HTTP request object containing the skill ID.
+ * @param {Object} res - HTTP response object returned to the client.
+ * @returns {Object} - The found skill or a not found error message.
+ */
+
 export const getSkillById = async (req, res) => {
   const { id } = req.params;
 
@@ -45,12 +66,19 @@ export const getSkillById = async (req, res) => {
   }
 };
 
-// Mettre à jour une compétence par son ID
+/**
+ * Update a skill by its ID.
+ *
+ * @param {Object} req - HTTP request object containing the skill ID and updated data.
+ * @param {Object} res - HTTP response object returned to the client.
+ * @returns {Object} - The updated skill or a not found error message.
+ */
+
 export const updateSkill = async (req, res) => {
   const { id } = req.params;
   const { wording, cv_id } = req.body;
 
-  // Valider les données avec Joi
+
   const { error } = SkillsSchema.validate({ wording, cv_id });
   if (error) {
     return res.status(400).json({ message: error.details[0].message });
@@ -71,7 +99,14 @@ export const updateSkill = async (req, res) => {
   }
 };
 
-// Supprimer une compétence par son ID
+/**
+ * Delete a skill by its ID.
+ *
+ * @param {Object} req - HTTP request object containing the skill ID to delete.
+ * @param {Object} res - HTTP response object returned to the client.
+ * @returns {Object} - A success message indicating the skill was deleted successfully or an error message.
+ */
+
 export const deleteSkill = async (req, res) => {
   const { id } = req.params;
 

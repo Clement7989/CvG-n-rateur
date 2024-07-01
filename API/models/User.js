@@ -1,5 +1,10 @@
 import mongoose from "mongoose";
 
+/**
+ * Mongoose schema for the User model.
+ * Represents user information stored in the database.
+ */
+
 const userSchema = new mongoose.Schema({
   firstname: {
     type: String,

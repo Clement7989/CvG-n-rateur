@@ -1,12 +1,19 @@
 import UserDetails from "../models/UserDetails.js";
 import { UserDetailsSchema } from "../validation/userDetailsValidation.js";
 
+/**
+ * Create new user details.
+ *
+ * @param {Object} req - HTTP request object containing the user details data.
+ * @param {Object} res - HTTP response object returned to the client.
+ * @returns {Object} - The created UserDetails entry or an error message.
+ */
+
 export const createUserDetails = async (req, res) => {
-  const { address, zip_code, city, country, cv_id } = req.body;
+  const { address, zip_code, country, cv_id } = req.body;
   const { error } = UserDetailsSchema.validate({
     address,
     zip_code,
-    city,
     country,
     cv_id,
   });
@@ -17,7 +24,6 @@ export const createUserDetails = async (req, res) => {
     const newUserDetails = new UserDetails({
       address,
       zip_code,
-      city,
       country,
       cv_id,
     });
@@ -27,6 +33,14 @@ export const createUserDetails = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+/**
+ * Get user details by ID.
+ *
+ * @param {Object} req - HTTP request object containing the UserDetails ID.
+ * @param {Object} res - HTTP response object returned to the client.
+ * @returns {Object} - The found UserDetails entry or a not found error message.
+ */
 
 export const getUserDetailsById = async (req, res) => {
   const { id } = req.params;
@@ -42,6 +56,14 @@ export const getUserDetailsById = async (req, res) => {
   }
 };
 
+/**
+ * Update user details by ID.
+ *
+ * @param {Object} req - HTTP request object containing the UserDetails ID and updated data.
+ * @param {Object} res - HTTP response object returned to the client.
+ * @returns {Object} - The updated UserDetails entry or a not found error message.
+ */
+
 export const updateUserDetails = async (req, res) => {
   const { id } = req.params;
   const { address, zip_code, city, country, cv_id } = req.body;
@@ -49,7 +71,7 @@ export const updateUserDetails = async (req, res) => {
   const { error } = UserDetailsSchema.validate({
     address,
     zip_code,
-    city,
+
     country,
     cv_id,
   });
@@ -60,7 +82,7 @@ export const updateUserDetails = async (req, res) => {
   try {
     const updatedUserDetails = await UserDetails.findByIdAndUpdate(
       id,
-      { address, zip_code, city, country, cv_id },
+      { address, zip_code, country, cv_id },
       { new: true }
     );
     if (!updatedUserDetails) {
@@ -71,6 +93,14 @@ export const updateUserDetails = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+/**
+ * Delete user details by ID.
+ *
+ * @param {Object} req - HTTP request object containing the UserDetails ID to delete.
+ * @param {Object} res - HTTP response object returned to the client.
+ * @returns {Object} - A success message indicating the UserDetails was deleted successfully or an error message.
+ */
 
 export const deleteUserDetails = async (req, res) => {
   const { id } = req.params;

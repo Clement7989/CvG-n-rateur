@@ -1,7 +1,14 @@
 import Contact from "../models/Contact.js";
 import { contactSchema } from "../validation/contactValidation.js";
 
-// Créer un nouveau contact
+/**
+ * Create a new contact.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - The created contact or an error message.
+ */
+
 export const createContact = async (req, res) => {
   const { error } = contactSchema.validate(req.body);
   if (error) return res.status(400).json({ message: error.details[0].message });
@@ -12,7 +19,7 @@ export const createContact = async (req, res) => {
       date,
       email,
       message,
-      statut :"non lu",
+      statut: "non lu",
     });
     await newContact.save();
     res.status(201).json(newContact);
@@ -21,7 +28,13 @@ export const createContact = async (req, res) => {
   }
 };
 
-// Obtenir tous les contacts
+/**
+ * Retrieve all contacts.
+ *
+ * @param {Object} res - The response object.
+ * @returns {Array} - List of all contacts or an error message.
+ */
+
 export const getContacts = async (req, res) => {
   try {
     const contacts = await Contact.find();
@@ -30,6 +43,14 @@ export const getContacts = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+/**
+ * Retrieve a contact by its ID.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - The contact object or an error message.
+ */
 
 // Obtenir un contact par son ID
 export const getContactById = async (req, res) => {
@@ -42,7 +63,14 @@ export const getContactById = async (req, res) => {
   }
 };
 
-// Mettre à jour un contact
+/**
+ * Update a contact.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - The updated contact or an error message.
+ */
+
 export const updateContact = async (req, res) => {
   const { error } = contactSchema.validate(req.body);
   if (error) return res.status(400).json({ message: error.details[0].message });
@@ -54,7 +82,6 @@ export const updateContact = async (req, res) => {
     contact.date = req.body.date;
     contact.email = req.body.email;
     contact.message = req.body.message;
-    contact.statut = req.body.statut; // Mettre à jour le statut du contact
 
     await contact.save();
     res.json(contact);
@@ -63,7 +90,14 @@ export const updateContact = async (req, res) => {
   }
 };
 
-// Supprimer un contact
+/**
+ * Delete a contact.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - A success message or an error message.
+ */
+
 export const deleteContact = async (req, res) => {
   try {
     const contact = await Contact.findById(req.params.id);
@@ -76,13 +110,20 @@ export const deleteContact = async (req, res) => {
   }
 };
 
-// Marquer un contact comme lu
+/**
+ * Mark a contact as read.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - The updated contact or an error message.
+ */
+
 export const markContactAsRead = async (req, res) => {
   try {
     const contact = await Contact.findById(req.params.id);
     if (!contact) return res.status(404).json({ message: "Contact not found" });
 
-    contact.statut = "lu"; // Mettre à jour le statut à "lu"
+    contact.statut = "lu";
 
     await contact.save();
     res.json(contact);
@@ -91,13 +132,20 @@ export const markContactAsRead = async (req, res) => {
   }
 };
 
-// Valider un contact (exemple : marquer comme validé)
+/**
+ * Validate a contact (example: mark as validated).
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - The updated contact or an error message.
+ */
+
 export const validateContact = async (req, res) => {
   try {
     const contact = await Contact.findById(req.params.id);
     if (!contact) return res.status(404).json({ message: "Contact not found" });
 
-    contact.statut = "validé"; // Exemple de validation, ajustez selon vos besoins
+    contact.statut = "validé";
 
     await contact.save();
     res.json(contact);

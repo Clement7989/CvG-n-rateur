@@ -1,5 +1,10 @@
 import mongoose from "mongoose";
 
+/**
+ * Mongoose schema for the Skills model.
+ * This schema represents skills associated with a CV.
+ */
+
 const SkillsSchema = new mongoose.Schema({
   wording: { type: String, required: true },
   cv_id: {

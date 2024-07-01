@@ -5,17 +5,23 @@ import {
   getSkillById,
   updateSkill,
   deleteSkill,
-} from "../Controllers/skillsController.js"; // ajustez le chemin selon l'emplacement réel
+} from "../Controllers/skillsController.js";
 
 const router = express.Router();
 
-// Middleware d'authentification appliqué à toutes les routes de skills
-
-// Routes pour les compétences
+// Route to create a new skill entry
 router.post("/", createSkill);
+
+// Route to get all skill entries
 router.get("/", getSkills);
+
+// Route to get a specific skill entry by ID
 router.get("/:id", getSkillById);
+
+// Route to update a specific skill entry by ID
 router.put("/:id", updateSkill);
+
+// Route to delete a specific skill entry by ID
 router.delete("/:id", deleteSkill);
 
 export default router;
