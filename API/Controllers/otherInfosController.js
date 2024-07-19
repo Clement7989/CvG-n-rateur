@@ -1,7 +1,6 @@
-
-
 import OtherInfos from "../models/OtherInfos.js";
 import { otherInfosSchema } from "../validation/otherInfosValidation.js";
+import { v4 as uuidv4 } from "uuid";
 
 /**
  * Create a new other information entry.
@@ -15,9 +14,10 @@ export const createOtherInfo = async (req, res) => {
   const { error, value } = otherInfosSchema.validate(req.body);
   if (error) return res.status(400).json({ message: error.details[0].message });
 
-  const { permit, hobbies, languages, cv_id } = value;
+  const { permit, hobbies, languages } = value;
 
   try {
+    const cv_id = uuidv4();
     const newOtherInfo = new OtherInfos({ permit, hobbies, languages, cv_id });
     await newOtherInfo.save();
     res.status(201).json(newOtherInfo);

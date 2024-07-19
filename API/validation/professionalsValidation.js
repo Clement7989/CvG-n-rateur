@@ -12,6 +12,4 @@ export const ProfessionalSchema = Joi.object({
   date_end: Joi.date().required(),
 
   description: Joi.string().min(10).max(50).required(),
-
-  cv_id: Joi.string().required(),
 });

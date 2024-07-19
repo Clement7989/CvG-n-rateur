@@ -1,5 +1,6 @@
 import Skills from "../models/Skills.js";
 import { SkillsSchema } from "../validation/skillsValidation.js";
+import { v4 as uuidv4 } from "uuid";
 
 /**
  * Create a new skill.
@@ -10,15 +11,13 @@ import { SkillsSchema } from "../validation/skillsValidation.js";
  */
 
 export const createSkill = async (req, res) => {
-  const { wording, cv_id } = req.body;
-
-
-  const { error } = SkillsSchema.validate({ wording, cv_id });
+  const { error, value } = SkillsSchema.validate(req.body);
   if (error) {
     return res.status(400).json({ message: error.details[0].message });
   }
-
+  const { wording } = value;
   try {
+    const cv_id = uuidv4();
     const newSkill = new Skills({ wording, cv_id });
     await newSkill.save();
     res.status(201).json(newSkill);
@@ -77,7 +76,6 @@ export const getSkillById = async (req, res) => {
 export const updateSkill = async (req, res) => {
   const { id } = req.params;
   const { wording, cv_id } = req.body;
-
 
   const { error } = SkillsSchema.validate({ wording, cv_id });
   if (error) {

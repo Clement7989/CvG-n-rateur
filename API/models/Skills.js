@@ -8,8 +8,7 @@ import mongoose from "mongoose";
 const SkillsSchema = new mongoose.Schema({
   wording: { type: String, required: true },
   cv_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "CvGenereted",
+    type: String, // Définir cv_id comme une chaîne de caractères
     required: true,
   },
 });

@@ -7,5 +7,4 @@ export const TrainingSchema = Joi.object({
   establishment: Joi.string().min(5).max(15).required(),
   date_start: Joi.date().required(),
   date_end: Joi.date().required(),
-  cv_id: Joi.string().required(),
 });

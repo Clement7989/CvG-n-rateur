@@ -11,8 +11,7 @@ const TrainingSchema = new mongoose.Schema({
   date_start: { type: Date, required: true },
   date_end: { type: Date, required: true },
   cv_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "CvGenereted",
+    type: String,
     required: true,
   },
 });

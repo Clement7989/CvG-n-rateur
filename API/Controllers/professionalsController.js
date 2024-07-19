@@ -1,5 +1,6 @@
 import Professionals from "../models/Professionals.js";
 import { ProfessionalSchema } from "../validation/professionalsValidation.js";
+import { v4 as uuidv4 } from "uuid";
 
 /**
  * Create a new professional entry.
@@ -11,12 +12,12 @@ import { ProfessionalSchema } from "../validation/professionalsValidation.js";
  */
 
 export const createProfessional = async (req, res) => {
-  const { error } = ProfessionalSchema.validate(req.body);
+  const { error, value } = ProfessionalSchema.validate(req.body);
   if (error) return res.status(400).json({ message: error.details[0].message });
 
-  const { title, business, date_start, date_end, description, cv_id } =
-    req.body;
+  const { title, business, date_start, date_end, description } = value;
   try {
+    const cv_id = uuidv4();
     const newProfessional = new Professionals({
       title,
       business,
@@ -27,8 +28,8 @@ export const createProfessional = async (req, res) => {
     });
     await newProfessional.save();
     res.status(201).json(newProfessional);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 

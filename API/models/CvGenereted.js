@@ -15,10 +15,12 @@ const CvGeneretedSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  otherInfos: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "OtherInfos",
-  },
+  otherInfos: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "OtherInfos",
+    },
+  ],
   professionals: [
     {
       type: mongoose.Schema.Types.ObjectId,

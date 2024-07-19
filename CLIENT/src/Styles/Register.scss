@@ -1,0 +1,43 @@
+// styles/register.scss
+
+.register-container {
+    text-align: center;
+    padding: 20px;
+  
+    h2 {
+      font-size: 18px; // Taille de police de base pour les mobiles
+      margin-bottom: 15px; // Marge inférieure plus petite pour les mobiles
+    }
+  
+    form {
+      margin-bottom: 20px; // Marge inférieure pour le formulaire
+    }
+  
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      font-size: 16px; // Taille de police de base pour les mobiles
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+  
+    button[type="submit"] {
+      width: 100%;
+      padding: 12px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px; // Taille de police de base pour les mobiles
+  
+      &:hover {
+        background-color: #0056b3; // Couleur de fond au survol pour les mobiles
+      }
+    }
+  }
+  

@@ -12,8 +12,7 @@ const ProfessionalsSchema = new mongoose.Schema({
   date_end: { type: Date, required: true },
   description: { type: String, required: true },
   cv_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "CvGenereted",
+    type: String,
     required: true,
   },
 });

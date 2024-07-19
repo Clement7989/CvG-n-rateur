@@ -10,8 +10,7 @@ const UserDetailsSchema = new mongoose.Schema({
   zip_code: { type: String, required: true },
   country: { type: String, required: true },
   cv_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "CvGenereted",
+    type: String, // Définir cv_id comme une chaîne de caractères
     required: true,
   },
 });

@@ -1,0 +1,47 @@
+// styles/home.scss
+
+.home-container {
+    text-align: center;
+    padding: 20px;
+  
+    h1 {
+      font-size: 18px; // Taille de police de base pour les mobiles
+      margin-bottom: 15px; // Marge inférieure plus petite pour les mobiles
+    }
+  
+    p {
+      font-size: 16px; // Taille de police de base pour les mobiles
+      color: #333; // Couleur de texte de base
+    }
+  
+    a {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 20px;
+      background-color: #870303;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 4px;
+  
+      &:hover {
+        background-color: #0056b3; // Couleur de fond au survol pour les mobiles
+      }
+    }
+  
+    // Styles spécifiques pour les appareils de bureau
+    @media (min-width: 768px) {
+      h1 {
+        font-size: 24px; // Taille de police pour les appareils de bureau
+        margin-bottom: 20px; // Marge inférieure plus grande pour les appareils de bureau
+      }
+  
+      p {
+        font-size: 18px; // Taille de police pour les appareils de bureau
+      }
+  
+      a {
+        padding: 12px 24px; // Espacement plus grand pour les appareils de bureau
+      }
+    }
+  }
+  

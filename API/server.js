@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { connectDB } from "./config/db.js";
+import apiRoutes from "./routes/api.routes.js";
 
 // Import des routes
 import authRoutes from "./routes/auth.routes.js";
@@ -28,6 +29,7 @@ app.use(express.json());
 connectDB();
 
 // Routes
+app.use("/api", apiRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/cvGenereted", cvGeneretedRoutes);

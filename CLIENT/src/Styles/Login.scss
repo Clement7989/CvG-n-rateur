@@ -1,0 +1,43 @@
+// styles/login.scss
+
+.login-container {
+    text-align: center;
+    padding: 20px;
+    background-color: rgb(0, 0, 0);
+  
+    h2 {
+      font-size: 18px; // Taille de police de base pour les mobiles
+      margin-bottom: 15px; // Marge inférieure plus petite pour les mobiles
+    }
+  
+    form {
+      margin-bottom: 20px; // Marge inférieure pour le formulaire
+    }
+  
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      font-size: 16px; // Taille de police de base pour les mobiles
+      border: 1px solid #6da70f;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+  
+    button[type="submit"] {
+      width: 100%;
+      padding: 12px;
+      background-color: #fbdf14;
+      color: #000000;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px; // Taille de police de base pour les mobiles
+  
+      &:hover {
+        background-color: #ffffff; // Couleur de fond au survol pour les mobiles
+      }
+    }
+  }
+  

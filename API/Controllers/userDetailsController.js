@@ -1,5 +1,6 @@
 import UserDetails from "../models/UserDetails.js";
 import { UserDetailsSchema } from "../validation/userDetailsValidation.js";
+import { v4 as uuidv4 } from "uuid";
 
 /**
  * Create new user details.
@@ -8,19 +9,13 @@ import { UserDetailsSchema } from "../validation/userDetailsValidation.js";
  * @param {Object} res - HTTP response object returned to the client.
  * @returns {Object} - The created UserDetails entry or an error message.
  */
-
 export const createUserDetails = async (req, res) => {
-  const { address, zip_code, country, cv_id } = req.body;
-  const { error } = UserDetailsSchema.validate({
-    address,
-    zip_code,
-    country,
-    cv_id,
-  });
-  if (error) {
-    return res.status(400).json({ message: error.details[0].message });
-  }
+  const { error, value } = UserDetailsSchema.validate(req.body);
+  if (error) return res.status(400).json({ message: error.details[0].message });
+  const { address, zip_code, country } = value;
+
   try {
+    const cv_id = uuidv4();
     const newUserDetails = new UserDetails({
       address,
       zip_code,

@@ -7,11 +7,10 @@ import mongoose from "mongoose";
 
 const OtherInfosSchema = new mongoose.Schema({
   permit: { type: Boolean, required: true },
-  hobbies: { type: [String], required: true },
-  languages: { type: [String], required: true },
+  hobbies: { type: String, required: true },
+  languages: { type: String, required: true },
   cv_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "CvGenereted",
+    type: String, // Définir cv_id comme une chaîne de caractères
     required: true,
   },
 });
