@@ -9,7 +9,6 @@ import { v4 as uuidv4 } from "uuid";
  * @param {Object} res - HTTP response object returned to the client.
  * @returns {Object} - The created skill or an error message.
  */
-
 export const createSkill = async (req, res) => {
   const { error, value } = SkillsSchema.validate(req.body);
   if (error) {
@@ -17,7 +16,7 @@ export const createSkill = async (req, res) => {
   }
   const { wording } = value;
   try {
-    const cv_id = uuidv4();
+    const cv_id = uuidv4(); // Generate a unique ID
     const newSkill = new Skills({ wording, cv_id });
     await newSkill.save();
     res.status(201).json(newSkill);
@@ -33,7 +32,6 @@ export const createSkill = async (req, res) => {
  * @param {Object} res - HTTP response object returned to the client.
  * @returns {Object} - An array of all skills or an error message.
  */
-
 export const getSkills = async (req, res) => {
   try {
     const skills = await Skills.find();
@@ -50,7 +48,6 @@ export const getSkills = async (req, res) => {
  * @param {Object} res - HTTP response object returned to the client.
  * @returns {Object} - The found skill or a not found error message.
  */
-
 export const getSkillById = async (req, res) => {
   const { id } = req.params;
 
@@ -72,12 +69,12 @@ export const getSkillById = async (req, res) => {
  * @param {Object} res - HTTP response object returned to the client.
  * @returns {Object} - The updated skill or a not found error message.
  */
-
 export const updateSkill = async (req, res) => {
   const { id } = req.params;
-  const { wording, cv_id } = req.body;
+  const { wording } = req.body;
 
-  const { error } = SkillsSchema.validate({ wording, cv_id });
+  // Validate the request body
+  const { error } = SkillsSchema.validate({ wording });
   if (error) {
     return res.status(400).json({ message: error.details[0].message });
   }
@@ -85,7 +82,7 @@ export const updateSkill = async (req, res) => {
   try {
     const updatedSkill = await Skills.findByIdAndUpdate(
       id,
-      { wording, cv_id },
+      { wording }, // Do not include cv_id here
       { new: true }
     );
     if (!updatedSkill) {
@@ -104,7 +101,6 @@ export const updateSkill = async (req, res) => {
  * @param {Object} res - HTTP response object returned to the client.
  * @returns {Object} - A success message indicating the skill was deleted successfully or an error message.
  */
-
 export const deleteSkill = async (req, res) => {
   const { id } = req.params;
 

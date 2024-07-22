@@ -1,18 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import axios from "axios";
 import jsPDF from "jspdf";
 import TrainingForm from "./TrainingForm";
 import OtherInfosForm from "./OtherInfosForm";
 import ProfessionalsForm from "./ProfessionalsForm";
+import SkillsForm from "./SkillsForm";
 
 const CVForm = () => {
   const [title, setTitle] = useState("Titre du CV");
-  const [firstName, setFirstName] = useState("");
-  const [email, setEmail] = useState("");
   const [trainings, setTrainings] = useState([]);
   const [otherInfos, setOtherInfos] = useState([]);
   const [professionals, setProfessionals] = useState([]);
+  const [skills, setSkills] = useState([]);
   const [cvData, setCvData] = useState(null);
+
+  const skillsFormRef = useRef(null);
 
   const addTraining = (trainingData) => {
     setTrainings([...trainings, trainingData]);
@@ -26,37 +28,33 @@ const CVForm = () => {
     setProfessionals([...professionals, professionalData]);
   };
 
-  const generatePDF = (cvData) => {
+  const addSkill = (skillData) => {
+    setSkills([...skills, skillData]);
+  };
+
+  const generatePDF = () => {
     const doc = new jsPDF();
 
     doc.setFontSize(20);
-    doc.text(cvData.title, 20, 20);
+    doc.text(title, 20, 20);
 
     doc.setFontSize(16);
-    doc.text(`Name: ${cvData.firstName}`, 20, 30);
-    doc.text(`Email: ${cvData.email}`, 20, 40);
+    doc.text(`Name: ${cvData.firstName || "Nom non spécifié"}`, 20, 30);
+    doc.text(`Email: ${cvData.email || "Email non spécifié"}`, 20, 40);
 
     if (cvData.trainings && cvData.trainings.length > 0) {
       doc.setFontSize(18);
       doc.text("Trainings:", 20, 50);
       cvData.trainings.forEach((training, index) => {
         doc.setFontSize(14);
-        doc.text(`Diplome: ${training.diploma}`, 20, 60 + index * 30);
+        doc.text(`Diploma: ${training.diploma}`, 20, 60 + index * 30);
         doc.text(
           `Establishment: ${training.establishment}`,
           20,
           70 + index * 30
         );
-        doc.text(
-          `Start Date: ${training.date_start.split("T")[0]}`,
-          20,
-          80 + index * 30
-        );
-        doc.text(
-          `End Date: ${training.date_end.split("T")[0]}`,
-          20,
-          90 + index * 30
-        );
+        doc.text(`Start Date: ${training.date_start}`, 20, 80 + index * 30);
+        doc.text(`End Date: ${training.date_end}`, 20, 90 + index * 30);
       });
     }
 
@@ -83,15 +81,11 @@ const CVForm = () => {
         doc.text(`Position: ${professional.title}`, 20, 130 + index * 30);
         doc.text(`Company: ${professional.business}`, 20, 140 + index * 30);
         doc.text(
-          `Start Date: ${professional.date_start.split("T")[0]}`,
+          `Start Date: ${professional.date_start}`,
           20,
           150 + index * 30
         );
-        doc.text(
-          `End Date: ${professional.date_end.split("T")[0]}`,
-          20,
-          160 + index * 30
-        );
+        doc.text(`End Date: ${professional.date_end}`, 20, 160 + index * 30);
         doc.text(
           `Description: ${professional.description}`,
           20,
@@ -100,7 +94,28 @@ const CVForm = () => {
       });
     }
 
+    if (cvData.skills && cvData.skills.length > 0) {
+      doc.setFontSize(18);
+      doc.text("Skills:", 20, 280);
+      cvData.skills.forEach((skill, index) => {
+        doc.setFontSize(14);
+        doc.text(`Skill: ${skill.wording}`, 20, 290 + index * 10);
+      });
+    }
+
     doc.save("cv.pdf");
+
+    // Réinitialiser les états après la génération du PDF
+    setTitle("Titre du CV");
+    setTrainings([]);
+    setOtherInfos([]);
+    setProfessionals([]);
+    setSkills([]);
+    setCvData(null);
+
+    if (skillsFormRef.current) {
+      skillsFormRef.current.reset();
+    }
   };
 
   const handleSubmit = async () => {
@@ -111,11 +126,10 @@ const CVForm = () => {
         "http://localhost:5000/api/cvGenereted",
         {
           title,
-          firstName,
-          email,
           trainings,
           otherInfos,
           professionals,
+          skills,
         },
         {
           headers: {
@@ -129,9 +143,6 @@ const CVForm = () => {
     } catch (error) {
       console.error("Error creating CV:", error);
     }
-    setTrainings([]);
-    setOtherInfos([]);
-    setProfessionals([]);
   };
 
   return (
@@ -142,28 +153,16 @@ const CVForm = () => {
         onChange={(e) => setTitle(e.target.value)}
         placeholder="Titre du CV"
       />
-      <input
-        type="text"
-        value={firstName}
-        onChange={(e) => setFirstName(e.target.value)}
-        placeholder="First Name"
-      />
-      <input
-        type="text"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
-      />
+
       <TrainingForm onAddTraining={addTraining} />
       <OtherInfosForm onAddOtherInfo={addOtherInfo} />
       <ProfessionalsForm onAddProfessional={addProfessional} />
+      <SkillsForm ref={skillsFormRef} onAddSkill={addSkill} />
 
       <button onClick={handleSubmit}>Générer le CV complet</button>
 
       {cvData && (
-        <button onClick={() => generatePDF(cvData)}>
-          Télécharger le CV en PDF
-        </button>
+        <button onClick={generatePDF}>Télécharger le CV en PDF</button>
       )}
     </div>
   );
