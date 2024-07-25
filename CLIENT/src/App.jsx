@@ -9,7 +9,7 @@ import {
 import Register from "./Components/Auth/Register";
 import Login from "./Components/Auth/Login";
 import Home from "./Components/Pages/Home";
-import "../src/Styles/App.scss";
+import Setting from "./Components/Pages/Setting";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -45,6 +45,10 @@ function App() {
               <Link to="/" className="nav-link">
                 Accueil
               </Link>
+              <Link to="/setting" className="nav-link">
+                Paramètres
+              </Link>
+
               <button onClick={handleLogout} className="logout-btn">
                 Déconnexion
               </button>
@@ -74,6 +78,12 @@ function App() {
               ) : (
                 <Navigate to="/" replace />
               )
+            }
+          />
+          <Route
+            path="/setting"
+            element={
+              isLoggedIn ? <Setting /> : <Navigate to="/login" replace />
             }
           />
         </Routes>

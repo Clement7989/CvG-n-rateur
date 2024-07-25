@@ -1,12 +1,27 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  useEffect,
+  useState,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import axios from "axios";
 
-const OtherInfosForm = ({ onAddOtherInfo }) => {
+const OtherInfosForm = forwardRef(({ onAddOtherInfo }, ref) => {
   const [permit, setPermit] = useState(false);
   const [hobbies, setHobbies] = useState("");
   const [languages, setLanguages] = useState("");
   const [otherInfos, setOtherInfos] = useState([]);
   const [currentId, setCurrentId] = useState(null);
+
+  useImperativeHandle(ref, () => ({
+    reset() {
+      setOtherInfos([]);
+      setPermit(false);
+      setHobbies("");
+      setLanguages("");
+      setCurrentId(null);
+    },
+  }));
 
   useEffect(() => {
     fetchOtherInfos();
@@ -153,5 +168,5 @@ const OtherInfosForm = ({ onAddOtherInfo }) => {
       </ul>
     </div>
   );
-};
+});
 export default OtherInfosForm;

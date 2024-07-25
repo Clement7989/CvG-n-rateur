@@ -39,14 +39,18 @@ const CvGeneretedSchema = new mongoose.Schema({
       ref: "Training",
     },
   ],
-  userDetails: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "UserDetails",
-  },
-  userComplet: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "UserComplet",
-  },
+  userDetails: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "UserDetails",
+    },
+  ],
+  userComplet: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "UserComplet",
+    },
+  ],
   firstName: {
     type: String,
     required: true,

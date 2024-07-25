@@ -1,14 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React, {
+  useState,
+  useEffect,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import axios from "axios";
 
-const ProfessionalsForm = ({ onAddProfessional }) => {
+const ProfessionalsForm = forwardRef(({ onAddProfessional }, ref) => {
   const [title, setTitle] = useState("");
   const [business, setBusiness] = useState("");
   const [date_start, setDate_start] = useState("");
   const [date_end, setDate_end] = useState("");
   const [description, setDescription] = useState("");
   const [professionals, setProfessionals] = useState([]);
-  const [currentId, setCurrentId] = useState(null); // State to track the current editing professional ID
+  const [currentId, setCurrentId] = useState(null);
+
+  useImperativeHandle(ref, () => ({
+    reset() {
+      setProfessionals([]);
+      setTitle("");
+      setBusiness("");
+      setDate_start("");
+      setDate_end("");
+      setDescription("");
+      setCurrentId(null);
+    },
+  }));
 
   useEffect(() => {
     fetchProfessionals();
@@ -80,7 +97,6 @@ const ProfessionalsForm = ({ onAddProfessional }) => {
         }
       }
 
-      // Reset form fields after adding or updating
       setTitle("");
       setBusiness("");
       setDate_start("");
@@ -195,6 +211,6 @@ const ProfessionalsForm = ({ onAddProfessional }) => {
       </ul>
     </div>
   );
-};
+});
 
 export default ProfessionalsForm;

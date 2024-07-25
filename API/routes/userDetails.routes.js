@@ -3,6 +3,7 @@ const router = express.Router();
 
 import {
   createUserDetails,
+  getAllUserDetails,
   getUserDetailsById,
   updateUserDetails,
   deleteUserDetails,
@@ -10,6 +11,8 @@ import {
 
 // Route to create user details
 router.post("/", createUserDetails);
+
+router.get("/", getAllUserDetails);
 
 // Route to get user details by ID
 router.get("/:id", getUserDetailsById);

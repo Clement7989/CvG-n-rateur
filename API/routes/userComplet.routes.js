@@ -4,6 +4,7 @@ const router = express.Router();
 import {
   createUserComplet,
   getUserCompletById,
+  getUserComplet,
   updateUserComplet,
   deleteUserComplet,
 } from "../Controllers/userCompletController.js";
@@ -11,6 +12,7 @@ import {
 // Route to create a new user completion entry
 router.post("/", createUserComplet);
 
+router.get("/", getUserComplet);
 // Route to get a user completion entry by ID
 router.get("/:id", getUserCompletById);
 

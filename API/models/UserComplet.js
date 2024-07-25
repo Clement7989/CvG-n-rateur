@@ -10,8 +10,8 @@ const UserCompletSchema = new mongoose.Schema({
   gender: { type: String, required: true },
   phone: { type: String, required: true },
   user_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    type: String,
+    required: true,
   },
 });
 

@@ -57,8 +57,9 @@ export const createCVGenereted = async (req, res) => {
     }
 
     // Assigner les userDetails directement à newCV.userDetails
-    if (userDetails) {
-      newCV.userDetails = userDetails._id;
+    if (userDetails && userDetails.length > 0) {
+      const userDetailIds = userDetails.map((userDetail) => userDetail._id);
+      newCV.userDetails = userDetailIds;
     }
 
     // Sauvegarder le nouveau CV généré dans la base de données

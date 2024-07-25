@@ -29,6 +29,15 @@ export const createUserDetails = async (req, res) => {
   }
 };
 
+export const getAllUserDetails = async (req, res) => {
+  try {
+    const userDetails = await UserDetails.find(); // Utiliser le modèle UserDetails
+    res.status(200).json(userDetails);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 /**
  * Get user details by ID.
  *
@@ -61,29 +70,21 @@ export const getUserDetailsById = async (req, res) => {
 
 export const updateUserDetails = async (req, res) => {
   const { id } = req.params;
-  const { address, zip_code, city, country, cv_id } = req.body;
+  const { error, value } = UserDetailsSchema.validate(req.body);
+  if (error) return res.status(400).json({ message: error.details[0].message });
 
-  const { error } = UserDetailsSchema.validate({
-    address,
-    zip_code,
-
-    country,
-    cv_id,
-  });
-  if (error) {
-    return res.status(400).json({ message: error.details[0].message });
-  }
+  const { address, zip_code, country } = value;
 
   try {
     const updatedUserDetails = await UserDetails.findByIdAndUpdate(
       id,
-      { address, zip_code, country, cv_id },
+      { address, zip_code, country },
       { new: true }
     );
     if (!updatedUserDetails) {
-      return res.status(404).json({ message: "User Details not found" });
+      return res.status(404).json({ message: "User Detail not found" });
     }
-    res.json(updatedUserDetails);
+    res.status(200).json(updatedUserDetails);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

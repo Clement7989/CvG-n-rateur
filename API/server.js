@@ -37,8 +37,8 @@ app.use("/api/otherInfos", otherInfosRoutes);
 app.use("/api/professionals", professionalsRoutes);
 app.use("/api/skills", skillsRoutes);
 app.use("/api/trainings", trainingRoutes);
-app.use("/api/userComplet", userCompletRoutes);
-app.use("/api/userDetails", userDetailsRoutes);
+app.use("/api/usercomplet", userCompletRoutes);
+app.use("/api/userdetails", userDetailsRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/contact", contactRoutes);
 

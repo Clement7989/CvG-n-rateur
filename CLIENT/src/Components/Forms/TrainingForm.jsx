@@ -1,13 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React, {
+  useState,
+  useEffect,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import axios from "axios";
 
-const TrainingForm = ({ onAddTraining }) => {
+const TrainingForm = forwardRef(({ onAddTraining }, ref) => {
   const [diploma, setDiploma] = useState("");
   const [establishment, setEstablishment] = useState("");
   const [date_start, setDate_start] = useState("");
   const [date_end, setDate_end] = useState("");
   const [trainings, setTrainings] = useState([]);
-  const [currentId, setCurrentId] = useState(null); // State to track the current editing training ID
+  const [currentId, setCurrentId] = useState(null);
+
+  useImperativeHandle(ref, () => ({
+    reset() {
+      setTrainings([]);
+      setDiploma("");
+      setEstablishment("");
+      setDate_start("");
+      setDate_end("");
+      setCurrentId(null);
+    },
+  }));
 
   useEffect(() => {
     fetchTrainings();
@@ -172,6 +188,6 @@ const TrainingForm = ({ onAddTraining }) => {
       </ul>
     </div>
   );
-};
+});
 
 export default TrainingForm;
