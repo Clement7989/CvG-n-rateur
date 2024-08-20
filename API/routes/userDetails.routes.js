@@ -9,6 +9,9 @@ import {
   deleteUserDetails,
 } from "../Controllers/userDetailsController.js";
 
+import { authMiddleware } from "../Middlewares/authMiddleware.js";
+
+router.use(authMiddleware);
 // Route to create user details
 router.post("/", createUserDetails);
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/api";
-import "../../Styles/Register.scss";
+import "../../Styles/auth/register.scss";
 
 const Register = ({ toggleForm }) => {
   const [firstname, setFirstname] = useState("");
@@ -18,12 +18,12 @@ const Register = ({ toggleForm }) => {
       const userData = { firstname, lastname, email, password };
       const response = await api.post("/auth/register", userData);
       console.log("Utilisateur enregistré avec succès:", response.data);
-      localStorage.setItem("firstname", firstname); // Stocke le prénom dans le local storage
+      localStorage.setItem("firstname", firstname); 
       setFirstname("");
       setLastname("");
       setEmail("");
       setPassword("");
-      navigate("/"); // Redirige vers la page d'accueil après l'inscription
+      navigate("/"); 
     } catch (error) {
       console.error("Erreur lors de l'inscription:", error.response);
       setErrorMessage(error.response.data.message);
@@ -32,15 +32,16 @@ const Register = ({ toggleForm }) => {
 
   return (
     <div className="register-container">
-      <h2>Inscription</h2>
+      <h2 className="register-heading">Inscription</h2>
       {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="register-form">
         <input
           type="text"
           placeholder="Prénom"
           value={firstname}
           onChange={(e) => setFirstname(e.target.value)}
           required
+          className="register-input"
         />
         <input
           type="text"
@@ -48,6 +49,7 @@ const Register = ({ toggleForm }) => {
           value={lastname}
           onChange={(e) => setLastname(e.target.value)}
           required
+          className="register-input"
         />
         <input
           type="email"
@@ -56,6 +58,7 @@ const Register = ({ toggleForm }) => {
           onChange={(e) => setEmail(e.target.value)}
           autoComplete="current-email"
           required
+          className="register-input"
         />
         <input
           type="password"
@@ -64,6 +67,7 @@ const Register = ({ toggleForm }) => {
           onChange={(e) => setPassword(e.target.value)}
           autoComplete="current-password"
           required
+          className="register-input"
         />
         <button type="submit">S'inscrire</button>
       </form>

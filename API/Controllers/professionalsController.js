@@ -16,6 +16,7 @@ export const createProfessional = async (req, res) => {
   if (error) return res.status(400).json({ message: error.details[0].message });
 
   const { title, business, date_start, date_end, description } = value;
+  const userId = req.user._id;
   try {
     const cv_id = uuidv4();
     const newProfessional = new Professionals({
@@ -25,6 +26,7 @@ export const createProfessional = async (req, res) => {
       date_end,
       description,
       cv_id,
+      userId,
     });
     await newProfessional.save();
     res.status(201).json(newProfessional);
@@ -42,8 +44,9 @@ export const createProfessional = async (req, res) => {
  */
 
 export const getAllProfessionals = async (req, res) => {
+  const userId = req.user._id;
   try {
-    const professionals = await Professionals.find();
+    const professionals = await Professionals.find({ userId });
     res.status(200).json(professionals);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -59,9 +62,10 @@ export const getAllProfessionals = async (req, res) => {
  */
 
 export const getProfessionalById = async (req, res) => {
-  const professionalId = req.params.id;
+  const { id } = req.params;
+  const userId = req.user._id;
   try {
-    const professional = await Professionals.findById(professionalId);
+    const professional = await Professionals.findOne({ _id: id, userId });
     if (!professional) {
       return res
         .status(404)
@@ -83,15 +87,16 @@ export const getProfessionalById = async (req, res) => {
  */
 
 export const updateProfessional = async (req, res) => {
+  const { id } = req.params;
   const { error } = ProfessionalSchema.validate(req.body);
   if (error) return res.status(400).json({ message: error.details[0].message });
-  const professionalId = req.params.id;
+  const userId = req.user._id;
   const { title, business, date_start, date_end, description, cv_id } =
     req.body;
 
   try {
-    const updateProfessional = await Professionals.findByIdAndUpdate(
-      professionalId,
+    const updateProfessional = await Professionals.findOneAndUpdate(
+      { _id: id, userId },
       { title, business, date_start, date_end, description, cv_id },
       { new: true }
     );
@@ -115,12 +120,14 @@ export const updateProfessional = async (req, res) => {
  */
 
 export const deleteProfessional = async (req, res) => {
-  const professionalId = req.params.id;
+  const { id } = req.params;
+  const userId = req.user._id;
 
   try {
-    const deletedProfessional = await Professionals.findByIdAndDelete(
-      professionalId
-    );
+    const deletedProfessional = await Professionals.findOneAndDelete({
+      _id: id,
+      userId,
+    });
     if (!deletedProfessional) {
       return res
         .status(404)

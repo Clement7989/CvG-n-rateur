@@ -1,29 +1,26 @@
-import User from "../models/User.js";
 import UserComplet from "../models/UserComplet.js";
 import { UserCompletSchema } from "../validation/userCompletValidation.js";
-import { v4 as uuidv4 } from "uuid";
 
 /**
- * Create a new UserComplet entry.
+ * Crée une nouvelle entrée UserComplet.
  *
- * @param {Object} req - HTTP request object containing the user complet data to create.
- * @param {Object} res - HTTP response object returned to the client.
- * @returns {Object} - The created UserComplet entry or an error message.
+ * @param {Object} req - Objet de requête HTTP contenant les données UserComplet à créer.
+ * @param {Object} res - Objet de réponse HTTP retourné au client.
+ * @returns {Object} - L'entrée UserComplet créée ou un message d'erreur.
  */
-
 export const createUserComplet = async (req, res) => {
   const { error, value } = UserCompletSchema.validate(req.body);
   if (error) return res.status(400).json({ message: error.details[0].message });
 
   const { birthday, gender, phone } = value;
+  const userId = req.user._id; // Utiliser l'ObjectId de l'utilisateur connecté
 
   try {
-    const user_id = uuidv4();
     const newUserComplet = new UserComplet({
       birthday,
       gender,
       phone,
-      user_id,
+      userId,
     });
     await newUserComplet.save();
     res.status(201).json(newUserComplet);
@@ -32,32 +29,17 @@ export const createUserComplet = async (req, res) => {
   }
 };
 
-//   const { birthday, gender, phone, user_id } = req.body;
-//   const { error } = UserCompletSchema.validate({
-//     birthday,
-//     gender,
-//     phone,
-//     user_id,
-//   });
-//   if (error) {
-//     return res.status(400).json({ message: error.details[0].message });
-//   }
-//   try {
-//     const newUserComplet = new UserComplet({
-//       birthday,
-//       gender,
-//       phone,
-//       user_id,
-//     });
-//     await newUserComplet.save();
-//     res.status(201).json(newUserComplet);
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// };
+/**
+ * Récupère toutes les entrées UserComplet pour l'utilisateur connecté.
+ *
+ * @param {Object} req - Objet de requête HTTP.
+ * @param {Object} res - Objet de réponse HTTP retourné au client.
+ * @returns {Object} - Liste des entrées UserComplet ou un message d'erreur.
+ */
 export const getUserComplet = async (req, res) => {
+  const userId = req.user._id;
   try {
-    const userComplet = await UserComplet.find();
+    const userComplet = await UserComplet.find({ userId });
     res.status(200).json(userComplet);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -65,18 +47,18 @@ export const getUserComplet = async (req, res) => {
 };
 
 /**
- * Get a UserComplet entry by its ID.
+ * Récupère une entrée UserComplet spécifique par son ID.
  *
- * @param {Object} req - HTTP request object containing the UserComplet ID.
- * @param {Object} res - HTTP response object returned to the client.
- * @returns {Object} - The found UserComplet entry or a not found error message.
+ * @param {Object} req - Objet de requête HTTP contenant l'ID de UserComplet.
+ * @param {Object} res - Objet de réponse HTTP retourné au client.
+ * @returns {Object} - L'entrée UserComplet trouvée ou un message d'erreur.
  */
-
 export const getUserCompletById = async (req, res) => {
   const { id } = req.params;
+  const userId = req.user._id;
 
   try {
-    const userComplet = await UserComplet.findById(id);
+    const userComplet = await UserComplet.findOne({ _id: id, userId });
     if (!userComplet) {
       return res.status(404).json({ message: "User Complet non trouvée" });
     }
@@ -87,28 +69,28 @@ export const getUserCompletById = async (req, res) => {
 };
 
 /**
- * Update a UserComplet entry by its ID.
+ * Met à jour une entrée UserComplet spécifique par son ID.
  *
- * @param {Object} req - HTTP request object containing the UserComplet ID and updated data.
- * @param {Object} res - HTTP response object returned to the client.
- * @returns {Object} - The updated UserComplet entry or a not found error message.
+ * @param {Object} req - Objet de requête HTTP contenant l'ID de UserComplet et les données mises à jour.
+ * @param {Object} res - Objet de réponse HTTP retourné au client.
+ * @returns {Object} - L'entrée UserComplet mise à jour ou un message d'erreur.
  */
-
 export const updateUserComplet = async (req, res) => {
   const { id } = req.params;
   const { error, value } = UserCompletSchema.validate(req.body);
   if (error) return res.status(400).json({ message: error.details[0].message });
 
-  const { birthday, gender, phone, user_id } = value;
+  const { birthday, gender, phone } = value;
+  const userId = req.user._id;
 
   try {
-    const updatedUserComplet = await UserComplet.findByIdAndUpdate(
-      id,
-      { birthday, gender, phone, user_id },
+    const updatedUserComplet = await UserComplet.findOneAndUpdate(
+      { _id: id, userId },
+      { birthday, gender, phone },
       { new: true }
     );
     if (!updatedUserComplet) {
-      return res.status(404).json({ message: "User Complet not found" });
+      return res.status(404).json({ message: "User Complet non trouvée" });
     }
     res.status(200).json(updatedUserComplet);
   } catch (error) {
@@ -116,46 +98,22 @@ export const updateUserComplet = async (req, res) => {
   }
 };
 
-// export const updateUserComplet = async (req, res) => {
-//   const { id } = req.params;
-//   const { birthday, gender, phone, user_id } = req.body;
-
-//   const { error } = UserCompletSchema.validate({
-//     birthday,
-//     gender,
-//     phone,
-//     user_id,
-//   });
-//   if (error) {
-//     return res.status(400).json({ message: error.details[0].message });
-//   }
-//   try {
-//     const updateUserComplet = await UserComplet.findByIdAndUpdate(
-//       id,
-//       { birthday, gender, phone, user_id },
-//       { new: true }
-//     );
-//     if (!updateUserComplet) {
-//       return res.status(404).json({ message: "User Complet non trouvée" });
-//     }
-//     res.json(updateUserComplet);
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// };
-
 /**
- * Delete a UserComplet entry by its ID.
+ * Supprime une entrée UserComplet spécifique par son ID.
  *
- * @param {Object} req - HTTP request object containing the UserComplet ID to delete.
- * @param {Object} res - HTTP response object returned to the client.
- * @returns {Object} - A success message indicating the UserComplet was deleted successfully or an error message.
+ * @param {Object} req - Objet de requête HTTP contenant l'ID de UserComplet à supprimer.
+ * @param {Object} res - Objet de réponse HTTP retourné au client.
+ * @returns {Object} - Un message de succès indiquant que l'entrée UserComplet a été supprimée ou un message d'erreur.
  */
-
 export const deleteUserComplet = async (req, res) => {
   const { id } = req.params;
+  const userId = req.user._id;
+
   try {
-    const deleteUserComplet = await UserComplet.findByIdAndDelete(id);
+    const deleteUserComplet = await UserComplet.findOneAndDelete({
+      _id: id,
+      userId,
+    });
     if (!deleteUserComplet) {
       return res.status(404).json({ message: "User Complet non trouvée" });
     }

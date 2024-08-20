@@ -4,6 +4,6 @@ import Joi from "joi";
 
 export const UserCompletSchema = Joi.object({
   birthday: Joi.date().required(),
-  gender: Joi.string().valid("male", "female", "other").required(),
+  gender: Joi.string().valid("Homme", "Femme", "Autre").required(),
   phone: Joi.string().max(10).required(),
 });

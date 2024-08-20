@@ -10,12 +10,14 @@ const SkillsForm = forwardRef(({ onAddSkill }, ref) => {
   const [wording, setWording] = useState("");
   const [skills, setSkills] = useState([]);
   const [currentId, setCurrentId] = useState(null);
+  const [errors, setErrors] = useState({});
 
   useImperativeHandle(ref, () => ({
     reset() {
       setWording("");
       setSkills([]);
       setCurrentId(null);
+      setErrors({});
     },
   }));
 
@@ -37,12 +39,31 @@ const SkillsForm = forwardRef(({ onAddSkill }, ref) => {
     }
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+    const wordingRegex = /^.{3,30}$/; 
+
+    if (!wording.match(wordingRegex)) {
+      newErrors.wording =
+        "Les atouts doivent contenir entre 3 et 30 caractères.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return; 
+    }
+
     try {
       const token = localStorage.getItem("token");
       const newSkill = { wording };
       let response;
+
       if (wording) {
         if (currentId) {
           response = await axios.put(
@@ -74,8 +95,9 @@ const SkillsForm = forwardRef(({ onAddSkill }, ref) => {
             onAddSkill(response.data);
           }
         }
+        setWording("");
+        setErrors({});
       }
-      setWording("");
     } catch (error) {
       console.error("Error creating or updating skills:", error);
     }
@@ -84,6 +106,7 @@ const SkillsForm = forwardRef(({ onAddSkill }, ref) => {
   const handleEditSkill = (skill) => {
     setWording(skill.wording);
     setCurrentId(skill._id);
+    setErrors({});
   };
 
   const handleDeleteSkill = async (skillId) => {
@@ -102,29 +125,42 @@ const SkillsForm = forwardRef(({ onAddSkill }, ref) => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label> Atouts : </label>
+    <div className="form-container">
+      <form className="form" onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label className="form-label">Atouts:</label>
           <input
             type="text"
+            className="form-input"
             value={wording}
             onChange={(e) => setWording(e.target.value)}
           />
+          {errors.wording && <p className="form-error">{errors.wording}</p>}
         </div>
-        <button type="submit"> Ajoutez ou modifier</button>
+        <button type="submit" className="form-button form-button--primary">
+          Ajouter ou modifier
+        </button>
       </form>
 
-      <ul>
-        <h2>Atouts</h2>
+      <ul className="form-list">
+        <h2 className="form-title">Atouts</h2>
         {skills.map((skill) => (
-          <li key={skill._id}>
+          <li key={skill._id} className="form-list-item">
             <strong>{skill.wording}</strong>
-            <br />
-            <button onClick={() => handleEditSkill(skill)}> Modifier</button>
-            <button onClick={() => handleDeleteSkill(skill._id)}>
-              Supprimer
-            </button>
+            <div className="form-actions">
+              <button
+                className="form-button form-button--success"
+                onClick={() => handleEditSkill(skill)}
+              >
+                Modifier
+              </button>
+              <button
+                className="form-button form-button--danger"
+                onClick={() => handleDeleteSkill(skill._id)}
+              >
+                Supprimer
+              </button>
+            </div>
           </li>
         ))}
       </ul>

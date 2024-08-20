@@ -1,20 +1,19 @@
 import mongoose from "mongoose";
 
-/**
- * Mongoose schema for the OtherInfos model.
- * Represents additional information related to a generated CV.
- */
-
-const OtherInfosSchema = new mongoose.Schema({
-  permit: { type: Boolean, required: true },
-  hobbies: { type: String, required: true },
-  languages: { type: String, required: true },
+const otherInfosSchema = new mongoose.Schema({
+  permit: Boolean,
+  hobbies: String,
+  languages: String,
   cv_id: {
-    type: String, // Définir cv_id comme une chaîne de caractères
+    type: String,
+    required: true,
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
     required: true,
   },
 });
 
-const OtherInfos = mongoose.model("OtherInfos", OtherInfosSchema);
-
+const OtherInfos = mongoose.model("OtherInfos", otherInfosSchema);
 export default OtherInfos;

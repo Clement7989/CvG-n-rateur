@@ -13,7 +13,9 @@ const TrainingForm = forwardRef(({ onAddTraining }, ref) => {
   const [date_end, setDate_end] = useState("");
   const [trainings, setTrainings] = useState([]);
   const [currentId, setCurrentId] = useState(null);
+  const [errors, setErrors] = useState({});
 
+ 
   useImperativeHandle(ref, () => ({
     reset() {
       setTrainings([]);
@@ -22,6 +24,7 @@ const TrainingForm = forwardRef(({ onAddTraining }, ref) => {
       setDate_start("");
       setDate_end("");
       setCurrentId(null);
+      setErrors({});
     },
   }));
 
@@ -43,8 +46,45 @@ const TrainingForm = forwardRef(({ onAddTraining }, ref) => {
     }
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+    const diplomaRegex = /^.{5,50}$/;
+    const establishmentRegex = /^.{5,50}$/;
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+
+    if (!diploma.match(diplomaRegex)) {
+      newErrors.diploma = "Le diplôme doit contenir entre 5 et 50 caractères.";
+    }
+
+    if (!establishment.match(establishmentRegex)) {
+      newErrors.establishment =
+        "L'établissement doit contenir entre 5 et 50 caractères.";
+    }
+
+    if (!date_start.match(dateRegex)) {
+      newErrors.date_start = "La date de début doit être au format YYYY-MM-DD.";
+    }
+
+    if (!date_end.match(dateRegex)) {
+      newErrors.date_end = "La date de fin doit être au format YYYY-MM-DD.";
+    }
+
+    if (date_start && date_end && new Date(date_end) <= new Date(date_start)) {
+      newErrors.date_end = "La date de fin doit être après la date de début.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      console.log("Validation errors:", errors);
+      return;
+    }
+
     try {
       const token = localStorage.getItem("token");
       const newTraining = {
@@ -54,64 +94,55 @@ const TrainingForm = forwardRef(({ onAddTraining }, ref) => {
         date_end,
       };
       let response;
-      if (diploma && establishment && date_start && date_end) {
-        if (currentId) {
-          // Update existing training
-          response = await axios.put(
-            `http://localhost:5000/api/trainings/${currentId}`,
-            newTraining,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-
-          // Update the trainings state with the updated training
-          const updatedTrainings = trainings.map((train) =>
-            train._id === response.data._id ? response.data : train
-          );
-          setTrainings(updatedTrainings);
-          setCurrentId(null); // Reset current ID after updating
-        } else {
-          // Add new training
-          response = await axios.post(
-            "http://localhost:5000/api/trainings",
-            newTraining,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-
-          // Add the new training to the trainings state
-          setTrainings([...trainings, response.data]);
-
-          // Call the onAddTraining function to update the global state if needed
-          if (onAddTraining) {
-            onAddTraining(response.data);
+      if (currentId) {
+        response = await axios.put(
+          `http://localhost:5000/api/trainings/${currentId}`,
+          newTraining,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
+        );
+        setTrainings(
+          trainings.map((train) =>
+            train._id === response.data._id ? response.data : train
+          )
+        );
+        setCurrentId(null);
+      } else {
+        response = await axios.post(
+          "http://localhost:5000/api/trainings",
+          newTraining,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setTrainings([...trainings, response.data]);
+        if (onAddTraining) {
+          onAddTraining(response.data);
         }
       }
 
-      // Reset form fields after adding or updating
       setDiploma("");
       setEstablishment("");
       setDate_start("");
       setDate_end("");
+      setErrors({});
     } catch (error) {
       console.error("Error creating or updating training:", error);
     }
   };
 
   const handleEditTraining = (training) => {
-    // Fill the form with the information of the training to edit
     setDiploma(training.diploma);
     setEstablishment(training.establishment);
-    setDate_start(training.date_start.split("T")[0]); // Ensure date format is correct
-    setDate_end(training.date_end.split("T")[0]); // Ensure date format is correct
-    setCurrentId(training._id); // Set the current ID to track the editing training
+    setDate_start(training.date_start.split("T")[0]);
+    setDate_end(training.date_end.split("T")[0]);
+    setCurrentId(training._id);
+    setErrors({});
   };
 
   const handleDeleteTraining = async (trainingId) => {
@@ -122,67 +153,91 @@ const TrainingForm = forwardRef(({ onAddTraining }, ref) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      const updatedTrainings = trainings.filter(
-        (training) => training._id !== trainingId
-      );
-      setTrainings(updatedTrainings);
+      setTrainings(trainings.filter((training) => training._id !== trainingId));
     } catch (error) {
       console.error("Error deleting training:", error);
     }
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label> Diplome : </label>
+    <div className="form-container">
+      <form className="form" onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label className="form-label">Diplôme:</label>
           <input
             type="text"
+            className="form-input"
             value={diploma}
             onChange={(e) => setDiploma(e.target.value)}
           />
+          {errors.diploma && <p className="form-error">{errors.diploma}</p>}
         </div>
-        <div>
-          <label> Etablissement : </label>
+
+        <div className="form-group">
+          <label className="form-label">Établissement:</label>
           <input
             type="text"
+            className="form-input"
             value={establishment}
             onChange={(e) => setEstablishment(e.target.value)}
           />
+          {errors.establishment && (
+            <p className="form-error">{errors.establishment}</p>
+          )}
         </div>
-        <div>
-          <label> Début : </label>
+
+        <div className="form-group">
+          <label className="form-label">Début:</label>
           <input
             type="date"
+            className="form-input"
             value={date_start}
             onChange={(e) => setDate_start(e.target.value)}
           />
+          {errors.date_start && (
+            <p className="form-error">{errors.date_start}</p>
+          )}
         </div>
-        <div>
-          <label>Fin : </label>
+
+        <div className="form-group">
+          <label className="form-label">Fin:</label>
           <input
             type="date"
+            className="form-input"
             value={date_end}
             onChange={(e) => setDate_end(e.target.value)}
           />
+          {errors.date_end && <p className="form-error">{errors.date_end}</p>}
         </div>
-        <button type="submit">Ajouter ou modifier </button>
+
+        <button type="submit" className="form-button form-button--primary">
+          Ajouter ou modifier
+        </button>
       </form>
 
-      <ul>
-        <h2>Formations</h2>
+      <ul className="form-list">
+        <h2 className="form-title">Formations</h2>
         {trainings.map((training) => (
-          <li key={training._id}>
-            <strong>{training.diploma}</strong> chez {training.establishment}{" "}
+          <li key={training._id} className="form-list-item">
+            <strong>{training.diploma}</strong> chez {training.establishment}
             <br />
-            {training.date_start.split("T")[0]} -{" "}
-            {training.date_end.split("T")[0]} <br />
-            <button onClick={() => handleEditTraining(training)}>
-              Modifier
-            </button>
-            <button onClick={() => handleDeleteTraining(training._id)}>
-              Supprimer
-            </button>
+            {new Date(training.date_start).toLocaleDateString()} -{" "}
+            {new Date(training.date_end).toLocaleDateString()}
+            <br />
+            <div className="form-actions">
+              <button
+                className="form-button form-button--success"
+                onClick={() => handleEditTraining(training)}
+              >
+                Modifier
+              </button>
+              <button
+                className="form-button form-button--danger"
+                onClick={() => handleDeleteTraining(training._id)}
+              >
+                Supprimer
+              </button>
+            </div>
           </li>
         ))}
       </ul>

@@ -6,13 +6,18 @@ import mongoose from "mongoose";
  */
 
 const ProfessionalsSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  business: { type: String, required: true },
-  date_start: { type: Date, required: true },
-  date_end: { type: Date, required: true },
-  description: { type: String, required: true },
+  title: String,
+  business: String,
+  date_start: Date,
+  date_end: Date,
+  description: String,
   cv_id: {
     type: String,
+    required: true,
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
     required: true,
   },
 });

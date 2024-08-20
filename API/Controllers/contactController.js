@@ -19,7 +19,7 @@ export const createContact = async (req, res) => {
       date,
       email,
       message,
-      statut: "non lu",
+      statut,
     });
     await newContact.save();
     res.status(201).json(newContact);
@@ -100,12 +100,18 @@ export const updateContact = async (req, res) => {
 
 export const deleteContact = async (req, res) => {
   try {
-    const contact = await Contact.findById(req.params.id);
-    if (!contact) return res.status(404).json({ message: "Contact not found" });
+    // Supprimer le contact en utilisant findByIdAndDelete
+    const contact = await Contact.findByIdAndDelete(req.params.id);
 
-    await contact.remove();
+    // Vérifier si le contact a été trouvé et supprimé
+    if (!contact) {
+      return res.status(404).json({ message: "Contact not found" });
+    }
+
+    // Répondre avec un message de succès
     res.json({ message: "Contact removed" });
   } catch (err) {
+    // Gérer les erreurs
     res.status(500).json({ message: err.message });
   }
 };
@@ -126,6 +132,22 @@ export const markContactAsRead = async (req, res) => {
     contact.statut = "lu";
 
     await contact.save();
+    res.json(contact);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const respondToContact = async (req, res) => {
+  const { response } = req.body; // Assurez-vous de passer la réponse dans le corps de la requête
+
+  try {
+    const contact = await Contact.findById(req.params.id);
+    if (!contact) return res.status(404).json({ message: "Contact not found" });
+
+    contact.response = response; // Met à jour le champ de réponse
+    await contact.save();
+
     res.json(contact);
   } catch (err) {
     res.status(500).json({ message: err.message });

@@ -15,9 +15,10 @@ export const createSkill = async (req, res) => {
     return res.status(400).json({ message: error.details[0].message });
   }
   const { wording } = value;
+  const userId = req.user._id;
   try {
     const cv_id = uuidv4(); // Generate a unique ID
-    const newSkill = new Skills({ wording, cv_id });
+    const newSkill = new Skills({ wording, cv_id, userId });
     await newSkill.save();
     res.status(201).json(newSkill);
   } catch (error) {
@@ -33,8 +34,9 @@ export const createSkill = async (req, res) => {
  * @returns {Object} - An array of all skills or an error message.
  */
 export const getSkills = async (req, res) => {
+  const userId = req.user._id;
   try {
-    const skills = await Skills.find();
+    const skills = await Skills.find({ userId });
     res.json(skills);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -50,9 +52,10 @@ export const getSkills = async (req, res) => {
  */
 export const getSkillById = async (req, res) => {
   const { id } = req.params;
+  const userId = req.user._id;
 
   try {
-    const skill = await Skills.findById(id);
+    const skill = await Skills.findById({ _id: id, userId });
     if (!skill) {
       return res.status(404).json({ message: "Compétence non trouvée" });
     }
@@ -71,17 +74,16 @@ export const getSkillById = async (req, res) => {
  */
 export const updateSkill = async (req, res) => {
   const { id } = req.params;
-  const { wording } = req.body;
+  const { error, value } = SkillsSchema.validate(req.body);
+  if (error) return res.status(400).json({ message: error.details[0].message });
+  const { wording } = value;
+  const userId = req.user._id;
 
   // Validate the request body
-  const { error } = SkillsSchema.validate({ wording });
-  if (error) {
-    return res.status(400).json({ message: error.details[0].message });
-  }
 
   try {
     const updatedSkill = await Skills.findByIdAndUpdate(
-      id,
+      { _id: id, userId },
       { wording }, // Do not include cv_id here
       { new: true }
     );
@@ -103,9 +105,13 @@ export const updateSkill = async (req, res) => {
  */
 export const deleteSkill = async (req, res) => {
   const { id } = req.params;
+  const userId = req.user._id;
 
   try {
-    const deletedSkill = await Skills.findByIdAndDelete(id);
+    const deletedSkill = await Skills.findByIdAndDelete({
+      _id: id,
+      userId,
+    });
     if (!deletedSkill) {
       return res.status(404).json({ message: "Compétence non trouvée" });
     }

@@ -1,5 +1,4 @@
 import express from "express";
-const router = express.Router();
 
 import {
   createTraining,
@@ -8,7 +7,11 @@ import {
   updateTraining,
   deleteTraining,
 } from "../Controllers/trainingController.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
 
+const router = express.Router();
+
+router.use(authMiddleware);
 // Route to create a new training entry
 router.post("/", createTraining);
 

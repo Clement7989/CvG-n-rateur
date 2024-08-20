@@ -1,10 +1,10 @@
 import React from "react";
-import UserCompletForm from "../Forms/UserCompletForm"; // Assurez-vous que le chemin est correct
+import UserCompletForm from "../Forms/UserCompletForm"; 
 
 const Setting = () => {
   return (
-    <div>
-      <h2>Page des Paramètres</h2>
+    <div className="setting-container">
+      <h2 className="h2-setting">Page des Paramètres</h2>
       <UserCompletForm />
     </div>
   );

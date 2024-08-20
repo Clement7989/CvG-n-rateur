@@ -1,0 +1,36 @@
+
+// Mobile-first
+
+.setting-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #000000;
+  padding: 1rem;
+  text-align: center;
+
+  .h2-setting{
+    color : white;
+    border : 1px solid #fedd40;
+    padding: 5px;
+    font-size: 25px;
+  }
+}
+
+// Tablette
+@media (min-width: 750px) {
+  .home-container {
+    padding: 2rem;
+  } 
+}
+
+// Desktop
+@media (min-width: 992px) {
+  .login-container {
+    padding: 3rem;
+  }
+
+}
+       
+       

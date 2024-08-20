@@ -9,6 +9,10 @@ import {
   deleteUserComplet,
 } from "../Controllers/userCompletController.js";
 
+import { authMiddleware } from "../Middlewares/authMiddleware.js";
+
+
+router.use(authMiddleware);
 // Route to create a new user completion entry
 router.post("/", createUserComplet);
 

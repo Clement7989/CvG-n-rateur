@@ -1,56 +1,118 @@
-// Variables SCSS (optionnel)
-// _variables.scss
 
-// Mixins SCSS (optionnel)
-// _mixins.scss
 
-body{
-    background-color: white;
+// Mobile-first
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #000000;
 }
 
 .header {
-  background-color: black;
-  color: #fff;
-  padding: 10px;
+  background-color: #000000;
+  padding: 1rem;
   text-align: center;
 }
 
-.logo {
-  width: 100px;
-}
-
 .navigation {
+  background-color: #000000;
+  padding: 1.5rem;
   display: flex;
-  justify-content: center;
-  margin-top: 10px;
+  flex-direction: column;
+  align-items: center;
 
-  .nav-link {
-    margin: 0 10px;
-    padding: 8px 16px;
-    text-decoration: none;
-    color: #fbdf14;
-    border: 1px solid #fbdf14;
-    border-radius: 4px;
-    transition: background-color 0.3s, color 0.3s;
+  .nav-links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    display: none; 
+    gap: 1rem;
 
-    &:hover {
-      background-color: black;
-      color: #fff;
+    .nav-link {
+      display: block;
+      padding: 0.5rem;
+      margin: 0.25rem 0;
+      text-decoration: none;
+      color: #fedd40;
+      font-size: 1rem;
+
+      &:hover {
+        color: #ffffff;
+      }
+    }
+
+    .logout-btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 10px;
+      background-color: #e01414;
+      color: #ffffff;
+      font-size: 1rem;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #ffffff;
+        color: rgb(255, 0, 0);
+        font-weight: 600;
+      }
     }
   }
 
-  .logout-btn {
-    margin-left: 10px;
-    padding: 8px 16px;
-    background-color: #dc3545;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
+  .burger-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
+    padding: 0.5rem;
 
-    &:hover {
-      background-color: #c82333;
+    i {
+      font-size: 24px;
+      color: #ffffff; 
+    }
+  }
+
+  .burger-menu.opened ~ .nav-links {
+    display: flex;
+  }
+}
+
+// Tablette 
+@media (min-width: 750px) {
+  .navigation {
+    flex-direction: row; 
+    justify-content: center; 
+    padding: 1rem; 
+
+    .nav-links {
+      display: flex; 
+      flex-direction: row; 
+      align-items: center; 
+      gap: 2rem; 
+      width: auto;
+    }
+
+    .burger-menu {
+      display: none; 
+    }
+  }
+}
+
+// Desktop
+@media (min-width: 1200px) {
+  .navigation {
+    .nav-links {
+      gap: 3rem; 
+    }
+
+    .nav-link {
+      font-size: 1.125rem; 
+    }
+
+    .logout-btn {
+      font-size: 1.125rem; 
+      padding: 1rem 2rem; 
     }
   }
 }

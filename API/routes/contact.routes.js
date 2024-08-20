@@ -7,6 +7,7 @@ import {
   getContactById,
   updateContact,
   deleteContact,
+  respondToContact,
   markContactAsRead,
   validateContact,
 } from "../Controllers/contactController.js";
@@ -27,6 +28,7 @@ router.get("/:id", getContactById);
 
 // Route to update a contact
 router.put("/:id", authMiddleware, adminMiddleware, updateContact);
+router.put("/:id/respond", authMiddleware, adminMiddleware, respondToContact);
 
 // Route to delete a contact
 router.delete("/:id", authMiddleware, adminMiddleware, deleteContact);

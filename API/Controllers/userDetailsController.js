@@ -14,6 +14,7 @@ export const createUserDetails = async (req, res) => {
   if (error) return res.status(400).json({ message: error.details[0].message });
   const { address, zip_code, country } = value;
 
+  const userId = req.user._id;
   try {
     const cv_id = uuidv4();
     const newUserDetails = new UserDetails({
@@ -21,6 +22,7 @@ export const createUserDetails = async (req, res) => {
       zip_code,
       country,
       cv_id,
+      userId,
     });
     await newUserDetails.save();
     res.status(201).json(newUserDetails);
@@ -30,8 +32,9 @@ export const createUserDetails = async (req, res) => {
 };
 
 export const getAllUserDetails = async (req, res) => {
+  const userId = req.user._id;
   try {
-    const userDetails = await UserDetails.find(); // Utiliser le modèle UserDetails
+    const userDetails = await UserDetails.find({ userId }); // Utiliser le modèle UserDetails
     res.status(200).json(userDetails);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -48,9 +51,10 @@ export const getAllUserDetails = async (req, res) => {
 
 export const getUserDetailsById = async (req, res) => {
   const { id } = req.params;
+  const userId = req.user._id;
 
   try {
-    const userDetails = await UserDetails.findById(id);
+    const userDetails = await UserDetails.findById({ _id: id, userId });
     if (!userDetails) {
       return res.status(404).json({ message: "User Details not found" });
     }
@@ -74,10 +78,11 @@ export const updateUserDetails = async (req, res) => {
   if (error) return res.status(400).json({ message: error.details[0].message });
 
   const { address, zip_code, country } = value;
+  const userId = req.user._id;
 
   try {
     const updatedUserDetails = await UserDetails.findByIdAndUpdate(
-      id,
+      { _id: id, userId },
       { address, zip_code, country },
       { new: true }
     );
@@ -100,8 +105,12 @@ export const updateUserDetails = async (req, res) => {
 
 export const deleteUserDetails = async (req, res) => {
   const { id } = req.params;
+  const userId = req.user._id;
   try {
-    const deletedUserDetails = await UserDetails.findByIdAndDelete(id);
+    const deletedUserDetails = await UserDetails.findByIdAndDelete({
+      _id: id,
+      userId,
+    });
     if (!deletedUserDetails) {
       return res.status(404).json({ message: "User Details not found" });
     }

@@ -1,0 +1,47 @@
+/* src/Styles/auth/logout.scss */
+
+/* Styles mobile-first */
+
+/* Conteneur de la page de déconnexion */
+.logout-container {
+       display: flex;
+       flex-direction: column;
+       align-items: center;
+       justify-content: center;
+       height: 100vh; /* Occupe toute la hauteur de la fenêtre */
+       background-color: #f4f4f4; /* Couleur de fond neutre */
+       padding: 1rem;
+       text-align: center; /* Centre le texte */
+     }
+     
+     /* Message de déconnexion */
+     .logout-message {
+       font-size: 1.5rem; /* Taille du texte */
+       color: #333; /* Couleur du texte */
+       margin: 0;
+     }
+     .logout-btn {
+       color:white;
+     }
+     
+     /* Styles pour les écrans plus larges */
+     @media (min-width: 576px) {
+       .logout-container {
+         padding: 2rem; /* Plus d'espace intérieur pour les écrans plus grands */
+       }
+       
+       .logout-message {
+         font-size: 2rem; /* Taille du texte augmentée pour les écrans plus larges */
+       }
+     }
+     
+     @media (min-width: 768px) {
+       .logout-container {
+         padding: 3rem; /* Plus d'espace intérieur pour les très grands écrans */
+       }
+     
+       .logout-message {
+         font-size: 2.5rem; /* Taille du texte encore augmentée pour les très grands écrans */
+       }
+     }
+     

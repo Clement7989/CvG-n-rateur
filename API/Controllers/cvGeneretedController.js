@@ -13,7 +13,7 @@ export const createCVGenereted = async (req, res) => {
   const { title, trainings, otherInfos, professionals, skills, userDetails } =
     req.body; // Récupérez les données de la requête
 
-  const userId = req.user._id;
+  const userId = req.user._id; // ID de l'utilisateur connecté
   const cv_id = uuidv4(); // Générez un nouvel UUID pour cv_id
 
   try {
@@ -77,3 +77,105 @@ export const createCVGenereted = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+/**
+ * Get all CVs for the currently authenticated user.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - List of CVs or an error message.
+ */
+export const getCVsByUser = async (req, res) => {
+  const userId = req.user._id; // ID de l'utilisateur connecté
+
+  try {
+    // Trouver tous les CVs associés à l'utilisateur connecté
+    const cvs = await CvGenereted.find({ userId }).populate(
+      "trainings professionals skills otherInfos userDetails"
+    );
+
+    if (cvs.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "Aucun CV trouvé pour cet utilisateur" });
+    }
+
+    res.json(cvs);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+/**
+ * Update a generated CV by ID for the currently authenticated user.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - The updated CV or an error message.
+ */
+export const updateCV = async (req, res) => {
+  const { id } = req.params; // ID du CV à mettre à jour
+  const { title, trainings, otherInfos, professionals, skills, userDetails } =
+    req.body; // Données de mise à jour
+
+  const userId = req.user._id; // ID de l'utilisateur connecté
+
+  try {
+    // Trouver le CV par son ID
+    const cv = await CvGenereted.findById(id);
+
+    if (!cv) {
+      return res.status(404).json({ message: "CV non trouvé" });
+    }
+
+    // Vérifier que le CV appartient à l'utilisateur connecté
+    if (cv.userId.toString() !== userId.toString()) {
+      return res.status(403).json({ message: "Accès non autorisé" });
+    }
+
+    // Mettre à jour les informations du CV
+    cv.title = title || cv.title;
+
+    // Mettre à jour les IDs des formations, professionnels, compétences et autres informations
+    if (trainings) cv.trainings = trainings;
+    if (otherInfos) cv.otherInfos = otherInfos;
+    if (professionals) cv.professionals = professionals;
+    if (skills) cv.skills = skills;
+    if (userDetails) cv.userDetails = userDetails;
+
+    // Sauvegarder les modifications
+    await cv.save();
+
+    // Répondre avec le CV mis à jour
+    res.json(cv);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+/**
+ * Delete a generated CV by ID for the currently authenticated user.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - A confirmation message or an error message.
+ */
+export const deleteCV = async (req, res) => {
+  const { id } = req.params; // ID du CV à supprimer
+  const userId = req.user._id; // ID de l'utilisateur connecté
+
+  try {
+    // Trouver et supprimer le CV par son ID
+    const cv = await CvGenereted.findOneAndDelete({ _id: id, userId });
+
+    if (!cv) {
+      return res.status(404).json({ message: "CV non trouvé" });
+    }
+
+    // Répondre avec une confirmation de suppression
+    res.json({ message: "CV supprimé avec succès" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+

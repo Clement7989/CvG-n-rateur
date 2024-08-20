@@ -14,6 +14,7 @@ export const createTraining = async (req, res) => {
   if (error) return res.status(400).json({ message: error.details[0].message });
 
   const { diploma, establishment, date_start, date_end } = value;
+  const userId = req.user._id;
 
   try {
     const cv_id = uuidv4();
@@ -23,6 +24,7 @@ export const createTraining = async (req, res) => {
       date_start,
       date_end,
       cv_id,
+      userId,
     });
     await newTraining.save();
     res.status(201).json(newTraining);
@@ -39,8 +41,9 @@ export const createTraining = async (req, res) => {
  * @returns {Object} - An array of all training entries or an error message.
  */
 export const getTrainings = async (req, res) => {
+  const userId = req.user._id;
   try {
-    const trainings = await Training.find();
+    const trainings = await Training.find({ userId });
     res.status(200).json(trainings);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -56,9 +59,10 @@ export const getTrainings = async (req, res) => {
  */
 export const getTrainingById = async (req, res) => {
   const { id } = req.params;
+  const userId = req.user._id;
 
   try {
-    const training = await Training.findById(id);
+    const training = await Training.findById({ _id: id, userId });
     if (!training) {
       return res.status(404).json({ message: "Training not found" });
     }
@@ -81,10 +85,10 @@ export const updateTraining = async (req, res) => {
   if (error) return res.status(400).json({ message: error.details[0].message });
 
   const { diploma, establishment, date_start, date_end, cv_id } = value;
-
+  const userId = req.user._id;
   try {
     const updatedTraining = await Training.findByIdAndUpdate(
-      id,
+      { _id: id, userId },
       { diploma, establishment, date_start, date_end, cv_id },
       { new: true }
     );
@@ -106,9 +110,13 @@ export const updateTraining = async (req, res) => {
  */
 export const deleteTraining = async (req, res) => {
   const { id } = req.params;
+  const userId = req.user._id;
 
   try {
-    const deletedTraining = await Training.findByIdAndDelete(id);
+    const deletedTraining = await Training.findByIdAndDelete({
+      _id: id,
+      userId,
+    });
     if (!deletedTraining) {
       return res.status(404).json({ message: "Training not found" });
     }

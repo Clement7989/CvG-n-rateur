@@ -1,0 +1,78 @@
+/* src/Styles/auth/register.scss */
+
+/* Styles pour les écrans mobiles (mobile-first) */
+.register-container {
+       display: flex;
+       flex-direction: column;
+       align-items: center;
+       justify-content: center;
+       min-height: 100vh;
+       background-color: #000000;
+       padding: 1rem;
+     
+       .register-heading {
+         margin-bottom: 1rem;
+         font-size: 1.5rem;
+         color: #fedd40;
+         text-align: center;
+       }
+     
+       .register-form {
+         width: 100%;
+         max-width: 600px; /* Ajustez la largeur selon vos besoins */
+         background: #fedd40;
+         padding: 2rem;
+         border-radius: 8px;
+         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+         display: flex;
+         flex-wrap: wrap; /* Permet aux éléments de passer à la ligne si nécessaire */
+         gap: 1rem; /* Espacement entre les éléments */
+     
+         .register-input {
+           flex: 1 1 100%; /* Chaque champ de saisie prend toute la largeur disponible sur mobile */
+           padding: 0.75rem;
+           border: 1px solid #000000;
+           border-radius: 4px;
+           font-size: 1rem;
+         }
+     
+         button {
+           flex: 1 1 100%; /* Le bouton prend toute la largeur disponible */
+           padding: 0.75rem;
+           border: none;
+           border-radius: 10px ;
+           border:1px solid #000000;
+           background-color: #ffffff;
+           color: #000000;
+           font-size: 1rem;
+           cursor: pointer;
+           transition: background-color 0.3s ease;
+           
+           &:hover {
+             background-color: #000000;
+             color:white
+           }
+         }
+     
+         p {
+           flex: 1 1 100%; /* Message d'erreur prend toute la largeur disponible */
+           margin-top: 1rem;
+           color: red;
+         }
+       }
+     
+       /* Styles pour les écrans plus grands */
+       @media (min-width: 576px) {
+         .register-form {
+           flex-direction: column; /* Aligner les éléments verticalement sur les écrans plus grands */
+           padding: 2.5rem;
+     
+           .register-input,
+           button,
+           p {
+             flex: none; /* Réinitialiser le flex pour les écrans plus grands */
+           }
+         }
+       }
+     }
+     

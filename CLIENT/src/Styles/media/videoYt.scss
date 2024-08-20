@@ -1,0 +1,36 @@
+$border-color: #fedd40;
+$bottom-margin: 20px; 
+
+.video-yt-container {
+  position: relative;
+  width: 100%;
+  padding-top: 55%; 
+  margin-bottom: $bottom-margin;
+  background: #000; 
+
+  .video-yt {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 5px solid $border-color; 
+    box-sizing: border-box; 
+  }
+}
+
+// Tablette
+@media (min-width: 768px) {
+  .video-yt-container {
+    padding-top: 50%; 
+  }
+}
+
+@media (min-width: 1024px) {
+  .video-yt-container {
+ 
+   
+    width: 80%;
+    
+  }
+}

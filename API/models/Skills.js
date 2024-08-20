@@ -1,9 +1,14 @@
 import mongoose from "mongoose";
 
 const SkillsSchema = new mongoose.Schema({
-  wording: { type: String, required: true },
+  wording: String,
   cv_id: {
     type: String,
+    required: true,
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
     required: true,
   },
 });

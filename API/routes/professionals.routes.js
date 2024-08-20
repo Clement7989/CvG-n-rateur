@@ -7,7 +7,11 @@ import {
   deleteProfessional,
 } from "../Controllers/professionalsController.js";
 
+import { authMiddleware } from "../Middlewares/authMiddleware.js";
+
 const router = express.Router();
+
+router.use(authMiddleware);
 
 // Route to create a new professional entry
 router.post("/", createProfessional);

@@ -1,0 +1,19 @@
+// main.scss
+@import "base/reset";
+@import "base/typo";
+@import "app";
+@import "pages/setting";
+@import "auth/register";
+@import "auth/login";
+@import "auth/logout";
+
+@import"pages/contact";
+@import "pages/cvs";
+@import 'base/globals';
+@import "components/userCompletForm";
+@import 'pages/adminDasboard';
+@import 'media/videoYt';
+@import "components/cvForm";
+@import '@fortawesome/fontawesome-free/css/all.min.css';
+
+

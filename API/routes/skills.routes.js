@@ -7,7 +7,11 @@ import {
   deleteSkill,
 } from "../Controllers/skillsController.js";
 
+import { authMiddleware } from "../Middlewares/authMiddleware.js";
+
 const router = express.Router();
+
+router.use(authMiddleware);
 
 // Route to create a new skill entry
 router.post("/", createSkill);

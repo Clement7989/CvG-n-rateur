@@ -1,0 +1,77 @@
+
+$primary-color: #fedd40;
+$secondary-color: red;
+$text-color: white;
+$background-color: black;
+
+// Styles de base (mobile)
+.btn-title-cv {
+  width: 80%;
+  padding: 10px;
+  border: 1px solid $secondary-color;
+  border-radius: 2px;
+  font-size: 16px;
+  color: $text-color;
+  background-color: $background-color;
+  margin-bottom: 20px;
+
+  &:focus {
+    border-color: $primary-color;
+    outline: none;
+  }
+}
+
+// Style pour les boutons
+.btn-genered-cv,
+.btn-download-cv {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  color: black;
+  cursor: pointer;
+  margin-top: 10px;
+  text-align: center;
+
+  &.btn-genered-cv {
+    background-color: $primary-color;
+  }
+
+  &.btn-download-cv {
+    background-color: $secondary-color;
+  }
+
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+// Styles pour les écrans de tablette
+@media (min-width: 768px) {
+  .btn-title-cv {
+    width: 75%; 
+  }
+
+  .btn-genered-cv,
+  .btn-download-cv {
+    width: auto;
+    display: inline-block;
+    margin: 10px;
+  }
+}
+
+// Styles pour les écrans de bureau
+@media (min-width: 1024px) {
+  .btn-title-cv {
+    width: 50%; 
+  }
+
+  .btn-genered-cv,
+  .btn-download-cv {
+    width: auto;
+    display: inline-block;
+    margin: 10px;
+  }
+}

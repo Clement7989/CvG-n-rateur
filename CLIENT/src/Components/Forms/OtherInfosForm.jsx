@@ -12,6 +12,7 @@ const OtherInfosForm = forwardRef(({ onAddOtherInfo }, ref) => {
   const [languages, setLanguages] = useState("");
   const [otherInfos, setOtherInfos] = useState([]);
   const [currentId, setCurrentId] = useState(null);
+  const [errors, setErrors] = useState({});
 
   useImperativeHandle(ref, () => ({
     reset() {
@@ -20,6 +21,7 @@ const OtherInfosForm = forwardRef(({ onAddOtherInfo }, ref) => {
       setHobbies("");
       setLanguages("");
       setCurrentId(null);
+      setErrors({});
     },
   }));
 
@@ -41,8 +43,33 @@ const OtherInfosForm = forwardRef(({ onAddOtherInfo }, ref) => {
     }
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+    const stringRegex = /^.{1,100}$/;
+
+    // Valider hobbies
+    if (!hobbies.match(stringRegex)) {
+      newErrors.hobbies =
+        "Les loisirs doivent contenir entre 5 et 100 caractères.";
+    }
+
+    // Valider languages
+    if (!languages.match(stringRegex)) {
+      newErrors.languages =
+        "Les langues doivent contenir entre 5 et 100 caractères.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
     try {
       const token = localStorage.getItem("token");
       const newOtherInfo = {
@@ -62,10 +89,10 @@ const OtherInfosForm = forwardRef(({ onAddOtherInfo }, ref) => {
               },
             }
           );
-          const updateOtherInfos = otherInfos.map((other) =>
+          const updatedOtherInfos = otherInfos.map((other) =>
             other._id === response.data._id ? response.data : other
           );
-          setOtherInfos(updateOtherInfos);
+          setOtherInfos(updatedOtherInfos);
           setCurrentId(null);
         } else {
           response = await axios.post(
@@ -86,6 +113,7 @@ const OtherInfosForm = forwardRef(({ onAddOtherInfo }, ref) => {
       setPermit(false);
       setHobbies("");
       setLanguages("");
+      setErrors({});
     } catch (error) {
       console.error("Error creating or updating other infos:", error);
     }
@@ -96,6 +124,7 @@ const OtherInfosForm = forwardRef(({ onAddOtherInfo }, ref) => {
     setHobbies(otherInfo.hobbies);
     setLanguages(otherInfo.languages);
     setCurrentId(otherInfo._id);
+    setErrors({});
   };
 
   const handleDeleteOtherInfo = async (otherInfoId) => {
@@ -109,64 +138,85 @@ const OtherInfosForm = forwardRef(({ onAddOtherInfo }, ref) => {
           },
         }
       );
-      const updateOtherInfos = otherInfos.filter(
+      const updatedOtherInfos = otherInfos.filter(
         (otherInfo) => otherInfo._id !== otherInfoId
       );
-      setOtherInfos(updateOtherInfos);
+      setOtherInfos(updatedOtherInfos);
     } catch (error) {
       console.error("Error deleting other infos:", error);
     }
   };
+
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Permit :</label>
+    <div className="form-container">
+      <form className="form" onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label className="form-label">Permis :</label>
           <input
             type="checkbox"
+            className="form-input"
             checked={permit}
             onChange={(e) => setPermit(e.target.checked)}
           />
         </div>
 
-        <div>
-          <label>Langues : </label>
+        <div className="form-group">
+          <label className="form-label">Langues : </label>
           <input
             type="text"
+            className="form-input"
             value={languages}
             onChange={(e) => setLanguages(e.target.value)}
           />
+          {errors.languages && <p className="form-error">{errors.languages}</p>}
         </div>
-        <div>
-          <label> Loisirs : </label>
+
+        <div className="form-group">
+          <label className="form-label">Loisirs : </label>
           <input
             type="text"
+            className="form-input"
             value={hobbies}
             onChange={(e) => setHobbies(e.target.value)}
           />
+          {errors.hobbies && <p className="form-error">{errors.hobbies}</p>}
         </div>
 
-        <button type="submit">Ajoutez ou modifier</button>
+        <button type="submit" className="form-button form-button--primary">
+          Ajoutez ou modifier
+        </button>
       </form>
-      <ul>
-        <h2>Autres informations</h2>
+
+      <ul className="form-list">
+        <h2 className="form-title">Autres informations</h2>
         {otherInfos.map((otherInfo) => (
-          <li key={otherInfo._id}>
-            <strong>{otherInfo.permit}</strong>
+          <li key={otherInfo._id} className="form-list-item">
+            <strong>
+              {otherInfo.permit ? "Permit : Oui" : "Permit : Non"}
+            </strong>
             <br />
             {otherInfo.languages}
             <br />
             {otherInfo.hobbies}
-            <button onClick={() => handleEditOtherInfo(otherInfo)}>
-              Modifier
-            </button>
-            <button onClick={() => handleDeleteOtherInfo(otherInfo._id)}>
-              Supprimer
-            </button>
+            <div className="form-actions">
+              <button
+                className="form-button form-button--success"
+                onClick={() => handleEditOtherInfo(otherInfo)}
+              >
+                Modifier
+              </button>
+              <button
+                className="form-button form-button--danger"
+                onClick={() => handleDeleteOtherInfo(otherInfo._id)}
+              >
+                Supprimer
+              </button>
+            </div>
           </li>
         ))}
       </ul>
     </div>
   );
 });
+
 export default OtherInfosForm;

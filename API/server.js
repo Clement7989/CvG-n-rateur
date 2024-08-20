@@ -17,6 +17,7 @@ import userDetailsRoutes from "./routes/userDetails.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import contactRoutes from "./routes/contact.routes.js";
 
+
 dotenv.config();
 
 const app = express();
@@ -24,6 +25,7 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
+
 
 // Connexion à la base de données
 connectDB();

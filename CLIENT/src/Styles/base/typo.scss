@@ -1,0 +1,80 @@
+
+
+// Importation de la police d'écriture Arimo
+@import url('https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&display=swap');
+
+// Définition des variables typographiques
+$font-family-base: 'Arimo', sans-serif;
+$font-size-base: 16px;
+$line-height-base: 1.5;
+$font-weight-normal: 400;
+$font-weight-bold: 700;
+
+// Corps du texte
+body {
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+  color: #333; 
+  background-color: #fff; 
+}
+
+// Titres
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font-family-base;
+  font-weight: $font-weight-bold;
+  color: #222; 
+
+  margin-bottom: 0.5rem; 
+}
+
+h1 {
+  font-size: 2rem; 
+}
+
+h2 {
+  font-size: 2rem; 
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+h4 {
+  font-size: 1.5rem; 
+}
+
+h5 {
+  font-size: 1.25rem; 
+}
+
+h6 {
+  font-size: 1rem; 
+}
+
+// Paragraphes
+p {
+  margin-bottom: 1rem; 
+  font-size: $font-size-base; 
+  line-height: $line-height-base; 
+}
+
+// Liens
+a {
+  color:rgb(208, 214, 29); 
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline; 
+  }
+}
+
+// Listes
+ul, ol {
+  margin-bottom: 1rem; 
+  padding-left: 1.5rem; 
+}
+
+li {
+  margin-bottom: 0.5rem; 
+}

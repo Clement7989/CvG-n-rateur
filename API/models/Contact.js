@@ -14,6 +14,7 @@ const ContactSchema = new mongoose.Schema({
     enum: ["lu", "non lu", "validé"],
     default: "non lu",
   },
+  response: { type: String, default: "" },
 });
 
 const Contact = mongoose.model("Contact", ContactSchema);

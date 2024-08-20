@@ -1,10 +1,6 @@
-import React, {
-  useState,
-  useEffect,
-  forwardRef,
-  useImperativeHandle,
-} from "react";
+import React, { useState, useEffect, forwardRef } from "react";
 import axios from "axios";
+
 
 const UserCompletForm = forwardRef(({ onAddUserComplet }, ref) => {
   const [birthday, setBirthday] = useState("");
@@ -12,15 +8,7 @@ const UserCompletForm = forwardRef(({ onAddUserComplet }, ref) => {
   const [phone, setPhone] = useState("");
   const [userComplet, setUserComplet] = useState([]);
   const [currentId, setCurrentId] = useState(null);
-
-  useImperativeHandle(ref, () => ({
-    reset() {
-      setBirthday("");
-      setGender("");
-      setPhone("");
-      setCurrentId(null);
-    },
-  }));
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     fetchUserComplet();
@@ -39,75 +27,98 @@ const UserCompletForm = forwardRef(({ onAddUserComplet }, ref) => {
       );
       setUserComplet(response.data);
     } catch (error) {
-      console.error("Error fetching user complet:", error);
+      console.error(
+        "Erreur lors de la récupération des informations utilisateur :",
+        error
+      );
     }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    const phoneRegex = /^[0-9]{10}$/; 
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/; 
+
+    if (!birthday.match(dateRegex)) {
+      newErrors.birthday =
+        "La date de naissance doit être au format YYYY-MM-DD.";
+    }
+
+    if (!gender) {
+      newErrors.gender = "Le genre est requis.";
+    }
+
+    if (!phone.match(phoneRegex)) {
+      newErrors.phone = "Le téléphone doit être un numéro de 10 chiffres.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return; 
+    }
+
     try {
       const token = localStorage.getItem("token");
-      const newUserComplet = {
-        birthday,
-        gender,
-        phone,
-      };
+      const userCompletData = { birthday, gender, phone };
       let response;
-      if (birthday && gender && phone) {
-        if (currentId) {
-          // Update existing UserComplet
-          response = await axios.put(
-            `http://localhost:5000/api/usercomplet/${currentId}`,
-            newUserComplet,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
 
-          // Update the userComplet state with the updated data
-          const updatedUserComplet = userComplet.map((item) =>
-            item._id === response.data._id ? response.data : item
-          );
-          setUserComplet(updatedUserComplet);
-          setCurrentId(null); // Reset current ID after updating
-        } else {
-          // Add new UserComplet
-          response = await axios.post(
-            "http://localhost:5000/api/usercomplet",
-            newUserComplet,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-
-          // Add the new UserComplet to the state
-          setUserComplet([...userComplet, response.data]);
-
-          // Call the onAddUserComplet function if needed
-          if (onAddUserComplet) {
-            onAddUserComplet(response.data);
+      if (currentId) {
+        
+        response = await axios.put(
+          `http://localhost:5000/api/usercomplet/${currentId}`,
+          userCompletData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-        }
+        );
+
+        
+        const updatedUserComplet = userComplet.map((user) =>
+          user._id === response.data._id ? response.data : user
+        );
+        setUserComplet(updatedUserComplet);
+        setCurrentId(null); 
+      } else {
+       
+        response = await axios.post(
+          "http://localhost:5000/api/usercomplet",
+          userCompletData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        
+        setUserComplet([...userComplet, response.data]);
+        if (onAddUserComplet) onAddUserComplet(response.data); 
       }
 
-      // Reset form fields after adding or updating
+      
       setBirthday("");
       setGender("");
       setPhone("");
+      setErrors({});
     } catch (error) {
-      console.error("Error creating or updating user complet:", error);
+      console.error("Erreur lors de la soumission du formulaire :", error);
     }
   };
 
   const handleEditUserComplet = (user) => {
-    setBirthday(user.birthday || ""); // Ensure default empty string
-    setGender(user.gender || ""); // Ensure default empty string
-    setPhone(user.phone || ""); // Ensure default empty string
-    setCurrentId(user._id); // Set the current ID to track the editing user
+    setBirthday(user.birthday.split("T")[0]); 
+    setGender(user.gender || "");
+    setPhone(user.phone || "");
+    setCurrentId(user._id); 
+    setErrors({});
   };
 
   const handleDeleteUserComplet = async (userId) => {
@@ -123,56 +134,80 @@ const UserCompletForm = forwardRef(({ onAddUserComplet }, ref) => {
       );
       setUserComplet(updatedUserComplet);
     } catch (error) {
-      console.error("Error deleting user complet:", error);
+      console.error(
+        "Erreur lors de la suppression des informations utilisateur :",
+        error
+      );
     }
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label> Date de Naissance : </label>
+    <div className="form-container">
+      <form className="form" onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label className="form-label">Date de Naissance:</label>
           <input
             type="date"
+            className="form-input"
             value={birthday}
             onChange={(e) => setBirthday(e.target.value)}
           />
+          {errors.birthday && <p className="form-error">{errors.birthday}</p>}
         </div>
-        <div>
-          <label> Genre : </label>
-          <input
-            type="text"
+
+        <div className="form-group">
+          <label className="form-label">Genre:</label>
+          <select
+            className="form-input"
             value={gender}
             onChange={(e) => setGender(e.target.value)}
-          />
+          >
+            <option value="">Sélectionnez un genre</option>
+            <option value="Homme">Homme</option>
+            <option value="Femme">Femme</option>
+            <option value="Autre">Autre</option>
+          </select>
+          {errors.gender && <p className="form-error">{errors.gender}</p>}
         </div>
-        <div>
-          <label> Téléphone : </label>
+
+        <div className="form-group">
+          <label className="form-label">Téléphone:</label>
           <input
-            type="text"
+            type="tel"
+            className="form-input"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
           />
+          {errors.phone && <p className="form-error">{errors.phone}</p>}
         </div>
-        <button type="submit">Ajouter ou modifier</button>
+
+        <button type="submit" className="form-button form-button--primary">
+          Ajouter ou Modifier
+        </button>
       </form>
 
-      <ul>
-        <h2>Utilisateurs Complets</h2>
+      <ul className="form-list">
+        <h2 className="form-title">Informations Utilisateur Complètes</h2>
         {userComplet.map((user) => (
-          <li key={user._id}>
-            <strong>Date de Naissance : {user.birthday.split("T")[0]}</strong>
-            <br />
-            Genre : {user.gender}
-            <br />
-            Téléphone : {user.phone}
-            <br />
-            <button onClick={() => handleEditUserComplet(user)}>
-              Modifier
-            </button>
-            <button onClick={() => handleDeleteUserComplet(user._id)}>
-              Supprimer
-            </button>
+          <li key={user._id} className="form-list-item">
+            <strong>Date de Naissance:</strong>{" "}
+            {new Date(user.birthday).toLocaleDateString()} <br />
+            <strong>Genre:</strong> {user.gender} <br />
+            <strong>Téléphone:</strong> {user.phone} <br />
+            <div className="form-actions">
+              <button
+                className="form-button form-button--success"
+                onClick={() => handleEditUserComplet(user)}
+              >
+                Modifier
+              </button>
+              <button
+                className="form-button form-button--danger"
+                onClick={() => handleDeleteUserComplet(user._id)}
+              >
+                Supprimer
+              </button>
+            </div>
           </li>
         ))}
       </ul>

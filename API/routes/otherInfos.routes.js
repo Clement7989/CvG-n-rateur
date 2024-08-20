@@ -6,22 +6,17 @@ import {
   updateOtherInfo,
   deleteOtherInfo,
 } from "../Controllers/otherInfosController.js";
+import { authMiddleware } from "../Middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-// Creating a new instance of Express Router
+// Appliquez le middleware d'authentification à toutes les routes
+router.use(authMiddleware);
+
 router.post("/", createOtherInfo);
-
-// Route to get all "other information" entries
 router.get("/", getAllOtherInfos);
-
-// Route to get a specific "other information" entry by ID
 router.get("/:id", getOtherInfoById);
-
-// Route to update a specific "other information" entry by ID
 router.put("/:id", updateOtherInfo);
-
-// Route to delete a specific "other information" entry by ID
 router.delete("/:id", deleteOtherInfo);
 
 export default router;

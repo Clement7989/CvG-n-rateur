@@ -6,11 +6,16 @@ import mongoose from "mongoose";
  */
 
 const UserDetailsSchema = new mongoose.Schema({
-  address: { type: String, required: true },
-  zip_code: { type: String, required: true },
-  country: { type: String, required: true },
+  address: String,
+  zip_code: String,
+  country: String,
   cv_id: {
-    type: String, // Définir cv_id comme une chaîne de caractères
+    type: String,
+    required: true,
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
     required: true,
   },
 });
